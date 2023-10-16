@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <!--
+    SPDX-FileCopyrightText: Daniel Brenyo <brenyodani@gmail.com>
+    SPDX-License-Identifier: CC0-1.0
+    -->
+    <id>rides</id>
+    <name>Rides</name>
+    <summary>Test</summary>
+    <description><![CDATA[Test]]></description>
+    <version>0.0.1</version>
+    <licence>agpl</licence>
+    <author mail="brenyodani@gmail.com" >Daniel Brenyo</author>
+    <namespace>Rides</namespace>
+    <category>multimedia</category>
+    <bugs>https://example.com</bugs>
+    <dependencies>
+        <nextcloud min-version="27" max-version="27"/>
+    </dependencies>
+    <navigations>
+        <navigation>
+            <name>Rides</name>
+            <route>rides.page.index</route>
+        </navigation>
+    </navigations>
+</info>
