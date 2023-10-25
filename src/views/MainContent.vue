@@ -7,6 +7,7 @@
         <input type="date" v-model="input3" placeholder="Date" @keyup.enter="addItem" />
         <input type="time" v-model="input4" placeholder="Time" @keyup.enter="addItem" />
         <button @click="addItem">Create Ride</button>
+        <button @click="sendData">Send Data</button>
       </div>
       <ul>
         <NcListItem
@@ -38,12 +39,15 @@
     </div>
   </template>
   
-  <script>
+
+<script>
+
+import axios from 'axios';
 import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-  import Delete from 'vue-material-design-icons/Delete'
-  import Pencil from 'vue-material-design-icons/Pencil'
+import Delete from 'vue-material-design-icons/Delete'
+import Pencil from 'vue-material-design-icons/Pencil'
 
   
   export default {
@@ -109,9 +113,23 @@ import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
         } 
       });
     }
-      
-      
       },
+
+
+      sendData() {
+
+        const data  = items;
+
+        axios.post('', {
+          data: data
+        }).then(response => {
+          console.log(response.data)
+        })
+
+      }
+
+
+
     },
   };
   </script>

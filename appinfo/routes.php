@@ -13,6 +13,19 @@ declare(strict_types=1);
  */
 return [
 	
+	'resources' => [
+        'rides' => ['url' => '/rides']
+    ],
+
+	$requirements = [
+		'apiVersion' => 'v1',
+	],
+
+	'ocs' => [
+
+	],
+
+
 	'routes' => [
 		['name' => 'page#index', 'url' => '/', 'verb' => 'GET']
 	]
