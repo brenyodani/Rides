@@ -24,8 +24,8 @@
   </template>
   
   <script>
-  import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
-  
+import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+
   export default {
     name: "UserSettings",
     components: {

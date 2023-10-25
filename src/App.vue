@@ -1,40 +1,29 @@
 <template>
 	<NcContent app-name="Rides">
-		<Navigation />
-		<NcAppContent>
-			<router-view/>
+	  	<Navigation />
+	  	<NcAppContent>
+			<router-view></router-view>
 		</NcAppContent>
 	</NcContent>
-</template>
-
-<script>
-
-import {
-	NcContent,
-	NcAppContent,
-} from '@nextcloud/vue'
-
-import Navigation from './components/Navigation.vue'
-import MainContent from './views/MainContent.vue'
-
-
-
-export default {
+	
+  </template>
+  
+  <script>
+  import Navigation from './components/Navigation.vue';
+  import MainContent from './views/MainContent.vue';
+  import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
+    import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
+  export default {
 	name: 'App',
 	components: {
-		Navigation,
 		NcContent,
-		MainContent,
-		NcAppContent,
+	  	Navigation,
+	  	MainContent,
+	  	NcAppContent,
 	},
-
-	computed: {	
-	},
-	methods: {
-		
-	}
-}
-</script>
+	
+  };
+  </script>
 <style scoped>
 	#app-content > div {
 		width: 100%;

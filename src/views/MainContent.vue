@@ -39,9 +39,9 @@
   </template>
   
   <script>
-  import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
-  import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-  import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
+import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
   import Delete from 'vue-material-design-icons/Delete'
   import Pencil from 'vue-material-design-icons/Pencil'
 

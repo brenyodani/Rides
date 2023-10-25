@@ -1,5 +1,4 @@
 <template>
-	<div class="nav">
 	  <NcAppNavigation>
 		<NcAppNavigationItem to="/list" name="Rides">
 		</NcAppNavigationItem>
@@ -8,13 +7,14 @@
 		<NcAppNavigationItem to="/settings" name="User settings">
 		</NcAppNavigationItem>
 	  </NcAppNavigation>
-	</div>
   </template>
   
 <script>
 
-import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation';
+import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
+
+
 
 export default {
 	name: 'Navigation',
