@@ -14,19 +14,12 @@ declare(strict_types=1);
 return [
 	
 	'resources' => [
-        'rides' => ['url' => '/rides']
+        'rides' => ['url' => '/rides'],
+		'rides_api' => ['url' => '/api/0.1/rides']
     ],
 
-	$requirements = [
-		'apiVersion' => 'v1',
-	],
-
-	'ocs' => [
-
-	],
-
-
 	'routes' => [
-		['name' => 'page#index', 'url' => '/', 'verb' => 'GET']
+		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
+		['name' => 'rides_api#setridedetails', 'url' => '/api/0.1/rides', 'verb' => 'POST']
 	]
 ];

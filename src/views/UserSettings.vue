@@ -35,6 +35,8 @@ import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadi
       return {
         input1: "",
         input2: "",
+        input3: "",
+        input4: "",
         selectedCheckboxes: [],
         checkboxes: [
           { label: "All", value: "all" },

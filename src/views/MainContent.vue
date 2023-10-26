@@ -48,6 +48,7 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import Delete from 'vue-material-design-icons/Delete'
 import Pencil from 'vue-material-design-icons/Pencil'
+import { generateOcsUrl } from '@nextcloud/router';
 
   
   export default {
@@ -118,13 +119,25 @@ import Pencil from 'vue-material-design-icons/Pencil'
 
       sendData() {
 
-        const data  = items;
 
-        axios.post('', {
-          data: data
-        }).then(response => {
-          console.log(response.data)
-        })
+        const baseUrl = 'https://da15-2a01-36d-2800-4278-ec72-5878-5f7f-d5a8.ngrok-free.app/apps/rides';
+
+        const data  = {
+            id: 1,
+            original: this.input1,
+            final: this.input2,
+            date: this.input3,
+            time: this.input4,
+          };
+
+        const url = ('/api/0.1/rides');
+
+        axios.post(baseUrl + url, data)
+        .then(response => {
+          console.log(response.data);
+        }) .catch(error => {
+          console.error(error);
+        });
 
       }
 
