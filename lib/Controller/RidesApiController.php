@@ -32,11 +32,16 @@ class RidesApiController extends ApiController
 	 */
     public function setRideDetails() {
 
-    $this->rideService->setRidesDetails();
-    $this->rideService->setRideFile($data);
-    
-}
+        $data = $this->rideService->setRidesDetails();
+        $this->rideService->serializeRide($data);
+        $this->rideService->setRideFile($data);
 
+
+        return $data;
+    }
+
+
+  
     
     
 
