@@ -1,9 +1,5 @@
 <template>
     <div>
-      <div class="create">
-        <h1>Ride listing</h1>
-
-      </div>
       <ul>
         <NcListItem
           v-for="(item, index) in jsonResponse"
@@ -22,7 +18,7 @@
                   <Pencil :size="20" />
                 </template>
               </NcActionButton>
-              <NcActionButton @click="deleteItem(item.id)">
+              <NcActionButton @click="deleteItem(index)">
                 <template #icon>
                   <Delete :size="20" />
                 </template>
@@ -34,26 +30,17 @@
     </div>
   </template>
   
-
-<script>
-
-import axios from 'axios';
-import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import Delete from 'vue-material-design-icons/Delete'
-import Pencil from 'vue-material-design-icons/Pencil'
-import { generateUrl } from "@nextcloud/router"
-
-
-
-
-
-
-
-  export default {
-    name: "MainContent",
+  <script>
+  import axios from 'axios';
+  import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js';
+  import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js';
+  import NcActions from '@nextcloud/vue/dist/Components/NcActions.js';
+  import Delete from 'vue-material-design-icons/Delete';
+  import Pencil from 'vue-material-design-icons/Pencil';
+  import { generateUrl } from "@nextcloud/router";
   
+  export default {
+    name: "FirstPage",
     components: {
       NcListItem,
       NcActionButton,
@@ -61,28 +48,16 @@ import { generateUrl } from "@nextcloud/router"
       Delete,
       Pencil
     },
-  
     data() {
       return {
-        input1: "",
-        input2: "",
-        input3: "",
-        input4: "",
-        items: [],
-        jsonResponse: {},
         jsonData: [],
-
-     
-     
+        items: [],
+        jsonResponse: {}
       };
     },
-  
-    created() {
-      this.items = this.$route.params.items || [];
-    },
-    
+
     mounted() {
-      axios({
+        axios({
           method: 'GET',
           url:'http://192.168.21.6/index.php/apps/rides/api/0.1/get',
           headers: {
@@ -108,71 +83,23 @@ import { generateUrl } from "@nextcloud/router"
           });
     },
 
+
+   
+
     methods: {
-      addItem() {
+      fetchData() {
+      },
 
-        if (this.input1 && this.input2 && this.input3 && this.input4) {
-          const id = Date.now();
-          const newItem = {
-            id: id,
-            original: this.input1,
-            final: this.input2,
-            date: this.input3,
-            time: this.input4,
-          };
-
-          this.items.push(newItem);
-         
-        }
       
-        const data  = {
-            id: 1,
-            original: this.input1,
-            final: this.input2,
-            date: this.input3,
-            time: this.input4,
-          };
-
-
-        axios.post('http://192.168.21.6/index.php/apps/rides/api/0.1/rides', data)
-        .then(response => {
-          console.log(response.data);
-        }) .catch(error => {
-          console.error(error);
-        });
-
-        this.input1 = "";
-        this.input2 = "";
-        this.input3 = "";
-        this.input4 = "";
+      editItem() {
       },
-  
-      deleteItem(id) {
+      deleteItem() {
+     },
 
-      },
-  
-      editItem(id) {
-        const item = this.items.find(item => item.id === id);      
-      
-        if (item) {
-      this.$router.push({ 
-        name: 'RideDetails', 
-        params: { 
-          id, 
-          original: item.original, 
-          final: item.final, 
-          date: item.date, 
-          time: item.time 
-        } 
-      });
-    }
-      },
+     cleanResponse() {
 
-    
-
-     
-
-
+     }
+ 
     },
   };
   </script>
@@ -192,4 +119,3 @@ import { generateUrl } from "@nextcloud/router"
   }
   </style>
   
-

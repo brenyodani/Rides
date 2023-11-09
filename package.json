@@ -2,6 +2,7 @@
   "name": "rides",
   "description": "Test",
   "version": "0.0.2",
+  "proxy": "http://localhost:8080",
   "author": "Daniel Brenyo <brenyodani@gmail.com>",
   "contributors": [],
   "bugs": {
