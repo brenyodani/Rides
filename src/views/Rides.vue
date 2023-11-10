@@ -36,9 +36,12 @@
   methods: {
     addItem() {
 
+<<<<<<< HEAD
       const baseURL = window.location.href;
 
 
+=======
+>>>>>>> 6ab165ccb6a63309458b38d69b614e4223a2592d
       if (this.input1 && this.input2 && this.input3 && this.input4) {
         const id = Date.now();
         const newItem = {
@@ -62,18 +65,27 @@
         };
 
 
+<<<<<<< HEAD
       axios.post(baseURL + '/api/0.1/rides', data)
+=======
+      axios.post('http://192.168.21.6/index.php/apps/rides/api/0.1/rides', data)
+>>>>>>> 6ab165ccb6a63309458b38d69b614e4223a2592d
       .then(response => {
         console.log(response.data);
       }) .catch(error => {
         console.error(error);
       });
 
+<<<<<<< HEAD
       this.$router.push({ name : 'MainContent'});
 
       },
 
       
+=======
+     
+      },
+>>>>>>> 6ab165ccb6a63309458b38d69b614e4223a2592d
   
   },
   };
