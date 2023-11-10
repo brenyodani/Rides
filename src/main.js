@@ -9,6 +9,8 @@ Vue.mixin({ methods: { t, n } })
 Vue.prototype.OC = window.OC
 Vue.prototype.OCA = window.OCA
 
+
+
 export default new Vue({
 	el: '#content',
 	router,

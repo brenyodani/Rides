@@ -5,6 +5,7 @@ import Rides from './views/Rides.vue'
 import MainContent from './views/MainContent.vue'
 import UserSettings from './views/UserSettings.vue'
 import RideDetails from './views/RideDetails.vue'
+import FirstPage from './views/FirstPage.vue'
 
 
 
@@ -15,6 +16,11 @@ export default new Router({
 	base: generateUrl('apps/rides'),
 	routes: [
 		
+		{
+			path: '/',
+			name: 'FirstPage',
+			component: 	FirstPage
+		},
 		{
 			path: '/list',
 			name: 'MainContent',
