@@ -14,12 +14,25 @@ declare(strict_types=1);
 return [
 	
 	'resources' => [
-        'rides' => ['url' => '/rides'],
+        'rides' => ['url' => 'apps/rides'],
 		'rides_api' => ['url' => '/api/0.1/rides']
     ],
 
 	'routes' => [
+		
+		// basic main page route 
 		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
-		['name' => 'rides_api#setridedetails', 'url' => '/api/0.1/rides', 'verb' => 'POST']
-	]
+		
+		
+		
+		
+		
+		// API routes 
+		['name' => 'rides_api#setridedetails', 'url' => '/api/0.1/rides', 'verb' => 'POST'],
+
+		['name' => 'rides_api#getrides', 'url' => '/api/0.1/get', 'verb' => 'GET'],
+		['name' => 'rides_api#editride', 'url' => '/api/0.1/edit', 'verb' => 'POST'],
+		['name' => 'rides_api#deleteride', 'url' => '/api/0.1/delete', 'verb' => 'POST'],
+
+		]
 ];
