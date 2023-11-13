@@ -18,7 +18,7 @@ class FileService {
     
     public function readFiles() {
         $currentUser = $this->currentUser->getUID();
-        $jsonDirectory = glob('/var/www/html/apps/rides/rides/' . $currentUser . '*.json');
+        $jsonDirectory = "/var/www/html/apps/rides/rides/" . $currentUser . '*.json';
         $jsonData = [];
     
         foreach ($jsonDirectory as $file) {

@@ -16,7 +16,7 @@
     <category>multimedia</category>
     <bugs>https://example.com</bugs>
     <dependencies>
-        <nextcloud min-version="27" max-version="27"/>
+        <nextcloud min-version="27" max-version="28"/>
     </dependencies>
     <navigations>
         <navigation>
