@@ -63,7 +63,7 @@
 
 
 
-      axios.post('http://192.168.21.6/index.php/apps/rides/api/0.1/rides', data)
+      axios.post('/apps/rides/api/0.1/rides', data)
       .then(response => {
         console.log(response.data);
       }) .catch(error => {

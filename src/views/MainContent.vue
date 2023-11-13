@@ -84,7 +84,7 @@ import { generateUrl } from "@nextcloud/router"
     mounted() {
       axios({
           method: 'GET',
-          url:'http://192.168.21.6/index.php/apps/rides/api/0.1/get',
+          url:'/apps/rides/api/0.1/get',
           headers: {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'application/json'
@@ -135,7 +135,6 @@ import { generateUrl } from "@nextcloud/router"
           };
 
 
-        axios.post(baseURL + '/api/0.1/rides', data)
         axios.post(baseURL + '/api/0.1/rides', data)
         .then(response => {
           console.log(response.data);

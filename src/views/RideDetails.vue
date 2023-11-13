@@ -69,7 +69,6 @@
           };
 
             axios.post(baseURL + '/api/0.1/edit', data)
-            axios.post(baseURL + '/api/0.1/edit', data)
             .then(response => {
             console.log(response.data);
             }) .catch(error => {
