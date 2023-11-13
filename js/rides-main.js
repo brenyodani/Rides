@@ -3852,7 +3852,7 @@ __webpack_require__.r(__webpack_exports__);
         date: this.input3,
         time: this.input4
       };
-      axios__WEBPACK_IMPORTED_MODULE_6__["default"].post(baseURL + '/api/0.1/rides', data).then(response => {
+      axios__WEBPACK_IMPORTED_MODULE_6__["default"].post('/apps/rides/api/0.1/rides', data).then(response => {
         console.log(response.data);
       }).catch(error => {
         console.error(error);
@@ -3927,7 +3927,7 @@ __webpack_require__.r(__webpack_exports__);
         date: this.editDate,
         time: this.editTime
       };
-      axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(baseURL + '/api/0.1/edit', data).then(response => {
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].post('/apps/rides/api/0.1/edit', data).then(response => {
         console.log(response.data);
       }).catch(error => {
         console.error(error);
@@ -3939,7 +3939,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteRide() {
       const baseURL = window.location.href;
       const id = this.$props.id;
-      axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(baseURL + '/api/0.1/delete', id).then(response => {
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].post('/apps/rides/api/0.1/delete', id).then(response => {
         console.log(response.data);
       }).catch(error => {
         console.error(error);
@@ -39071,4 +39071,4 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].prototype.OCA = window.OCA;
 
 /******/ })()
 ;
-//# sourceMappingURL=rides-main.js.map?v=5964bc18ecf4db5d61fe
+//# sourceMappingURL=rides-main.js.map?v=78f7a3bff8461b559a8e

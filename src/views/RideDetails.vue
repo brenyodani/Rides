@@ -68,7 +68,7 @@
             time: this.editTime,
           };
 
-            axios.post(baseURL + '/api/0.1/edit', data)
+            axios.post('/apps/rides/api/0.1/edit', data)
             .then(response => {
             console.log(response.data);
             }) .catch(error => {
@@ -87,7 +87,7 @@
             const id = this.$props.id;
 
            
-            axios.post(baseURL + '/api/0.1/delete', id)
+            axios.post('/apps/rides/api/0.1/delete', id)
             .then(response => {
             console.log(response.data);
             }) .catch(error => {

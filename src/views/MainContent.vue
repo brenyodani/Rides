@@ -135,7 +135,7 @@ import { generateUrl } from "@nextcloud/router"
           };
 
 
-        axios.post(baseURL + '/api/0.1/rides', data)
+        axios.post('/apps/rides/api/0.1/rides', data)
         .then(response => {
           console.log(response.data);
         }) .catch(error => {
