@@ -59,9 +59,17 @@
     mounted() {
 
 
+<<<<<<< HEAD
         axios({
           method: 'GET',
           url: '/apps/rides/api/0.1/get',
+=======
+      const baseURL = window.location.href;
+
+        axios({
+          method: 'GET',
+          url: baseURL + '/api/0.1/get',
+>>>>>>> 6bbbacd5c2cfc4f6232fc87369318ab2fd6655a1
           headers: {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'application/json'
@@ -78,8 +86,11 @@
             const jsonResponse = JSON.parse(`[${respondeString}]`);
             console.log(jsonResponse);
             
+<<<<<<< HEAD
            
 
+=======
+>>>>>>> 6bbbacd5c2cfc4f6232fc87369318ab2fd6655a1
             this.jsonResponse = jsonResponse
           })
           .catch((error) => {

@@ -9,7 +9,11 @@
     <name>Rides</name>
     <summary>Test</summary>
     <description><![CDATA[Test]]></description>
+<<<<<<< HEAD
     <version>0.0.5</version>
+=======
+    <version>0.0.6</version>
+>>>>>>> 6bbbacd5c2cfc4f6232fc87369318ab2fd6655a1
     <licence>agpl</licence>
     <author mail="brenyodani@gmail.com" >Daniel Brenyo</author>
     <namespace>Rides</namespace>

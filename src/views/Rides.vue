@@ -62,7 +62,12 @@
         };
 
 
+<<<<<<< HEAD
       axios.post('/index.php/apps/rides/api/0.1/rides', data)
+=======
+
+      axios.post('http://192.168.21.6/index.php/apps/rides/api/0.1/rides', data)
+>>>>>>> 6bbbacd5c2cfc4f6232fc87369318ab2fd6655a1
       .then(response => {
         console.log(response.data);
       }) .catch(error => {
