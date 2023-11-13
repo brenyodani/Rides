@@ -57,19 +57,10 @@
 
 
         saveRide() {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 48e4ffaea83ce9aa1ef50d4e50cd0703de988d1e
-            
+
             const baseURL = window.location.href;
 
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 6ab165ccb6a63309458b38d69b614e4223a2592d
->>>>>>> 48e4ffaea83ce9aa1ef50d4e50cd0703de988d1e
             const data  = {
             id: this.$props.id,
             original: this.editOriginal,
@@ -78,15 +69,8 @@
             time: this.editTime,
           };
 
-<<<<<<< HEAD
             axios.post(baseURL + '/api/0.1/edit', data)
-=======
-<<<<<<< HEAD
             axios.post(baseURL + '/api/0.1/edit', data)
-=======
-            axios.post('http://192.168.21.6/index.php/apps/rides/api/0.1/edit', data)
->>>>>>> 6ab165ccb6a63309458b38d69b614e4223a2592d
->>>>>>> 48e4ffaea83ce9aa1ef50d4e50cd0703de988d1e
             .then(response => {
             console.log(response.data);
             }) .catch(error => {
@@ -98,10 +82,6 @@
         },
 
         deleteRide() {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 48e4ffaea83ce9aa1ef50d4e50cd0703de988d1e
 
             const baseURL = window.location.href;
 
@@ -110,15 +90,6 @@
 
            
             axios.post(baseURL + '/api/0.1/delete', id)
-<<<<<<< HEAD
-=======
-=======
-            const id = this.$props.id;
-
-           
-            axios.post('http://192.168.21.6/index.php/apps/rides/api/0.1/delete', id)
->>>>>>> 6ab165ccb6a63309458b38d69b614e4223a2592d
->>>>>>> 48e4ffaea83ce9aa1ef50d4e50cd0703de988d1e
             .then(response => {
             console.log(response.data);
             }) .catch(error => {

@@ -57,24 +57,13 @@
     },
 
     mounted() {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 48e4ffaea83ce9aa1ef50d4e50cd0703de988d1e
+
 
       const baseURL = window.location.href;
 
         axios({
           method: 'GET',
           url: baseURL + '/api/0.1/get',
-<<<<<<< HEAD
-=======
-=======
-        axios({
-          method: 'GET',
-          url:'http://192.168.21.6/index.php/apps/rides/api/0.1/get',
->>>>>>> 6ab165ccb6a63309458b38d69b614e4223a2592d
->>>>>>> 48e4ffaea83ce9aa1ef50d4e50cd0703de988d1e
           headers: {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'application/json'
