@@ -82,18 +82,9 @@ import { generateUrl } from "@nextcloud/router"
     },
     
     mounted() {
-<<<<<<< HEAD
-
-     
-      
-      axios({
-          method: 'GET',
-          url: '/index.php/apps/rides/api/0.1/get',
-=======
       axios({
           method: 'GET',
           url:'http://192.168.21.6/index.php/apps/rides/api/0.1/get',
->>>>>>> 6bbbacd5c2cfc4f6232fc87369318ab2fd6655a1
           headers: {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'application/json'
@@ -120,19 +111,6 @@ import { generateUrl } from "@nextcloud/router"
     methods: {
       addItem() {
 
-<<<<<<< HEAD
-        const baseURL = window.location.href;
-
-        var base_url = window.location.origin;
-      var host = window.location.host;
-      var pathArray = window.location.pathname.split( '/' );
-
-      console.log(base_url);
-      console.log(host);
-      console.log(pathArray);
-
-=======
->>>>>>> 6bbbacd5c2cfc4f6232fc87369318ab2fd6655a1
 
         if (this.input1 && this.input2 && this.input3 && this.input4) {
           const id = Date.now();
@@ -157,12 +135,8 @@ import { generateUrl } from "@nextcloud/router"
           };
 
 
-<<<<<<< HEAD
-        axios.post('/index.php/apps/rides/api/0.1/rides', data)
-=======
         axios.post(baseURL + '/api/0.1/rides', data)
         axios.post(baseURL + '/api/0.1/rides', data)
->>>>>>> 6bbbacd5c2cfc4f6232fc87369318ab2fd6655a1
         .then(response => {
           console.log(response.data);
         }) .catch(error => {

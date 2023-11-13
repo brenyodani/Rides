@@ -57,11 +57,6 @@
 
 
         saveRide() {
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 6bbbacd5c2cfc4f6232fc87369318ab2fd6655a1
             const baseURL = window.location.href;
 
 
@@ -73,12 +68,8 @@
             time: this.editTime,
           };
 
-<<<<<<< HEAD
-            axios.post('/index.php/apps/rides/api/0.1/edit', data)
-=======
             axios.post(baseURL + '/api/0.1/edit', data)
             axios.post(baseURL + '/api/0.1/edit', data)
->>>>>>> 6bbbacd5c2cfc4f6232fc87369318ab2fd6655a1
             .then(response => {
             console.log(response.data);
             }) .catch(error => {
@@ -97,11 +88,7 @@
             const id = this.$props.id;
 
            
-<<<<<<< HEAD
-            axios.post('/index.php/apps/rides/api/0.1/delete', id)
-=======
             axios.post(baseURL + '/api/0.1/delete', id)
->>>>>>> 6bbbacd5c2cfc4f6232fc87369318ab2fd6655a1
             .then(response => {
             console.log(response.data);
             }) .catch(error => {
