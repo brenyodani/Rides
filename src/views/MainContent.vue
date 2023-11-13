@@ -2,32 +2,27 @@
     <div>
       <div class="create">
         <h1>Ride listing</h1>
-        <input type="text" v-model="input1" placeholder="Original" @keyup.enter="addItem" />
-        <input type="text" v-model="input2" placeholder="Final" @keyup.enter="addItem" />
-        <input type="date" v-model="input3" placeholder="Date" @keyup.enter="addItem" />
-        <input type="time" v-model="input4" placeholder="Time" @keyup.enter="addItem" />
-        <button @click="addItem">Create Ride</button>
-        <button @click="sendData">Send Data</button>
+
       </div>
       <ul>
         <NcListItem
-          v-for="(item, index) in items"
+          v-for="(item, index) in jsonResponse"
           :key="item.id"
-          :name="item"
-          :title="'Original' + item.original + ' - Final:'  + item.final + ' - Date:' + item.date + ' - Time:' + item.time"
+          :name="item.id"
+          :title="'Original: ' + item.original + ' - Final: ' + item.final + ' - Date: ' + item.date + ' - Time: ' + item.time"
           :to="{ name: 'RideDetails', params: { id: item.id, original: item.original, final: item.final, date: item.date, time: item.time }}"
         >
           <template>
-            <div>{{ item.original + ' - ' + item.final + ' - ' + item.date + ' - ' + item.time }}</div>
+            <div>{{ 'Original: ' + item.original + ' - Final: ' + item.final + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
           </template>
           <template #actions>
             <NcActions :inline="2">
               <NcActionButton @click="editItem(item.id)">
                 <template #icon>
-                    <Pencil :size="20" />
+                  <Pencil :size="20" />
                 </template>
               </NcActionButton>
-              <NcActionButton @click="deleteItem(index)">
+              <NcActionButton @click="deleteItem(item.id)">
                 <template #icon>
                   <Delete :size="20" />
                 </template>
@@ -48,9 +43,14 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
 import Delete from 'vue-material-design-icons/Delete'
 import Pencil from 'vue-material-design-icons/Pencil'
-import { generateOcsUrl } from '@nextcloud/router';
+import { generateUrl } from "@nextcloud/router"
 
-  
+
+
+
+
+
+
   export default {
     name: "MainContent",
   
@@ -69,15 +69,62 @@ import { generateOcsUrl } from '@nextcloud/router';
         input3: "",
         input4: "",
         items: [],
+        jsonResponse: {},
+        jsonData: [],
+
+     
+     
       };
     },
   
     created() {
       this.items = this.$route.params.items || [];
     },
-  
+    
+    mounted() {
+
+     
+      
+      axios({
+          method: 'GET',
+          url: '/index.php/apps/rides/api/0.1/get',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept-Encoding': 'application/json'
+          },
+
+
+        }).then((response) => {
+            this.jsonData = response.data
+           
+            const startingBracket = this.jsonData.indexOf("[");
+            const closingBracket = this.jsonData.indexOf("]");
+
+            const respondeString = this.jsonData.substring(startingBracket + 1, closingBracket);
+            const jsonResponse = JSON.parse(`[${respondeString}]`);
+            console.log(jsonResponse);
+            
+            this.jsonResponse = jsonResponse
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+    },
+
     methods: {
       addItem() {
+
+        const baseURL = window.location.href;
+
+        var base_url = window.location.origin;
+      var host = window.location.host;
+      var pathArray = window.location.pathname.split( '/' );
+
+      console.log(base_url);
+      console.log(host);
+      console.log(pathArray);
+
+
         if (this.input1 && this.input2 && this.input3 && this.input4) {
           const id = Date.now();
           const newItem = {
@@ -87,16 +134,35 @@ import { generateOcsUrl } from '@nextcloud/router';
             date: this.input3,
             time: this.input4,
           };
+
           this.items.push(newItem);
-          this.input1 = "";
-          this.input2 = "";
-          this.input3 = "";
-          this.input4 = "";
+         
         }
+      
+        const data  = {
+            id: 1,
+            original: this.input1,
+            final: this.input2,
+            date: this.input3,
+            time: this.input4,
+          };
+
+
+        axios.post('/index.php/apps/rides/api/0.1/rides', data)
+        .then(response => {
+          console.log(response.data);
+        }) .catch(error => {
+          console.error(error);
+        });
+
+        this.input1 = "";
+        this.input2 = "";
+        this.input3 = "";
+        this.input4 = "";
       },
   
-      deleteItem(index) {
-        this.items.splice(index, 1);
+      deleteItem(id) {
+
       },
   
       editItem(id) {
@@ -116,31 +182,9 @@ import { generateOcsUrl } from '@nextcloud/router';
     }
       },
 
+    
 
-      sendData() {
-
-
-        const baseUrl = 'https://da15-2a01-36d-2800-4278-ec72-5878-5f7f-d5a8.ngrok-free.app/apps/rides';
-
-        const data  = {
-            id: 1,
-            original: this.input1,
-            final: this.input2,
-            date: this.input3,
-            time: this.input4,
-          };
-
-        const url = ('/api/0.1/rides');
-
-        axios.post(baseUrl + url, data)
-        .then(response => {
-          console.log(response.data);
-        }) .catch(error => {
-          console.error(error);
-        });
-
-      }
-
+     
 
 
     },
@@ -162,3 +206,4 @@ import { generateOcsUrl } from '@nextcloud/router';
   }
   </style>
   
+

@@ -1,8 +1,0 @@
-version: '3.4'
-
-services:
-  rides:
-    image: rides
-    build:
-      context: .
-      dockerfile: ./Dockerfile

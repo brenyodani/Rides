@@ -14,7 +14,8 @@
     
     <script>
   
-  
+  import axios from 'axios';
+
   export default {
   name: "Rides",
   
@@ -27,23 +28,52 @@
       return {
           input1: "",
           input2: "",
-              input3: "",
-              input4: "",
+          input3: "",
+          input4: "",
           items: [],
       };
   },
   methods: {
     addItem() {
+
+      const baseURL = window.location.href;
+
+
       if (this.input1 && this.input2 && this.input3 && this.input4) {
-        this.items.push(`original: ${this.input1} - final ${this.input2} - Date ${this.input3} - Time ${this.input4}`);
-        this.input1 = "";
-        this.input2 = "";
-        this.input3 = "";
-        this.input4 = "";
-        
-        this.$router.push({ name: 'MainContent', params: { items: this.items } });
+        const id = Date.now();
+        const newItem = {
+          id: id,
+          original: this.input1,
+          final: this.input2,
+          date: this.input3,
+          time: this.input4,
+        };
+
+        this.items.push(newItem);
+      
       }
-    },
+
+      const data  = {
+          id: 1,
+          original: this.input1,
+          final: this.input2,
+          date: this.input3,
+          time: this.input4,
+        };
+
+
+      axios.post('/index.php/apps/rides/api/0.1/rides', data)
+      .then(response => {
+        console.log(response.data);
+      }) .catch(error => {
+        console.error(error);
+      });
+
+      this.$router.push({ name : 'MainContent'});
+
+      },
+
+      
   
   },
   };

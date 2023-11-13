@@ -6,25 +6,31 @@ declare(strict_types=1);
 namespace OCA\Rides\Controller;
 
 use OCP\IRequest;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\ApiController;
 use OCA\Rides\Service\RideService;
+use OCA\Rides\Service\FileService;
+
+
 
 class RidesApiController extends ApiController
 {
 
     /** @var RideService */
     private $rideService;
+    /** @var FileService */
+    private $fileService;
 
     public function __construct(string $AppName,
                                 IRequest $request,
-                                RideService $rideService) {
+                                RideService $rideService,
+                                FileService $fileService) {
         parent::__construct($AppName, $request);
         $this->rideService = $rideService;
+        $this->fileService = $fileService;
     }
 
-
-
-
+    
     /**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
@@ -32,18 +38,46 @@ class RidesApiController extends ApiController
 	 */
     public function setRideDetails() {
 
-        $data = $this->rideService->setRidesDetails();
-        $this->rideService->serializeRide($data);
-        $this->rideService->setRideFile($data);
+        $content = $this->rideService->setRidesDetails();
+        $id = $this->rideService->createId();
+        $this->rideService->checkID($id);
+        $this->rideService->createRideFile($content, $id);
 
+    }
 
-        return $data;
+    /**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+     * @return JSONResponse
+	 */
+    public function getRides() {
+        $result = $this->fileService->readFiles();
+        header('Content-Type: application/json');
+        echo $result;
+    }
+  
+    
+     /**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+    public function editRide() {
+        $data = $this->fileService->getRideDetails();
+        $this->fileService->editFiles($data);
     }
 
 
-  
-    
-    
+    /**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+    public function deleteRide() {
+        $content = $this->fileService->getRideDetails();
+        $this->fileService->deleteRideFile($content);
+        $this->rideService->deleteID($content);
+    }
+
+
 
 
 }
