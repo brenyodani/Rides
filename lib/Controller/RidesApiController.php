@@ -74,6 +74,7 @@ class RidesApiController extends ApiController
     public function deleteRide() {
         $content = $this->fileService->getRideDetails();
         $this->fileService->deleteRideFile($content);
+        $this->rideService->deleteID($content);
     }
 
 

@@ -122,6 +122,34 @@ class RideService {
     }
     
     
+    public function deleteID($content) {
+        $filePath = '/var/www/html/apps/rides/rides/id.txt';
+    
+        $id = strval($content["id"]);
+    
+        try {
+            $ids = file_get_contents($filePath);
+    
+            $idArray = explode('/', trim($ids));
+    
+            foreach($idArray as $key => $value) {
+                
+                if($id == $value) {
+                    unset($idArray[$key]);
+                }
+            }
+
+            file_put_contents($filePath, implode('/', $idArray));
+
+
+        } catch (\Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+    
+
+    }
+    
     
     
 
@@ -132,7 +160,6 @@ class RideService {
 
 
 
-}
 
 
 
