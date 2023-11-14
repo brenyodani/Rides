@@ -58,10 +58,10 @@
 
     mounted() {
 
-
+  
         axios({
           method: 'GET',
-          url: 'index.php/apps/rides/api/0.1/get',
+          url:'api/0.1/get',
           headers: {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'application/json'

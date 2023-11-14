@@ -84,7 +84,7 @@ import { generateUrl } from "@nextcloud/router"
     mounted() {
       axios({
           method: 'GET',
-          url:'/apps/rides/api/0.1/get',
+          url:'/index.php/apps/rides/api/0.1/get',
           headers: {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'application/json'
@@ -135,10 +135,12 @@ import { generateUrl } from "@nextcloud/router"
           };
 
 
-        axios.post('/apps/rides/api/0.1/rides', data)
+        axios.post('/index.php/apps/rides/api/0.1/rides', data)
         .then(response => {
           console.log(response.data);
         }) .catch(error => {
+          console.log(baseUrl + '/api/0.1/get');
+
           console.error(error);
         });
 
@@ -146,6 +148,11 @@ import { generateUrl } from "@nextcloud/router"
         this.input2 = "";
         this.input3 = "";
         this.input4 = "";
+
+
+
+      const baseUrl = `${generateUrl("apps/rides")}/webapp`
+      console.log(baseUrl + '/api/0.1/get');
       },
   
       deleteItem(id) {

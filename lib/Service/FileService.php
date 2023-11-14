@@ -18,13 +18,14 @@ class FileService {
     
     public function readFiles() {
         $currentUser = $this->currentUser->getUID();
-        $jsonDirectory = "/var/www/html/apps/rides/rides/" . $currentUser . '*.json';
-        $jsonData = [];
+       $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/";
+       $jsonDirectory = glob($baseDir . $currentUser . '*.json');
+ 
+       $jsonData = [];
     
         foreach ($jsonDirectory as $file) {
             $fileContent = file_get_contents($file);
-            $decodedData = json_decode($fileContent, false);
-
+            $decodedData = json_decode($fileContent, true); 
             if ($decodedData !== null && !empty($decodedData)) {
                 $jsonData[] = $decodedData;
             }
@@ -32,6 +33,7 @@ class FileService {
     
         return json_encode($jsonData);
     }
+    
     
 
     public function getRideDetails() {
