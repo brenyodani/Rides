@@ -56,6 +56,7 @@
         },   
 
         saveRide() {
+<<<<<<< HEAD
     const baseURL = window.location.origin + "/index.php/apps/rides"; 
 
     const data = {
@@ -68,6 +69,21 @@
 
     axios.post(`${baseURL}/api/0.1/edit`, data)
         .then(response => {
+=======
+            const baseURL = window.location.href;
+
+
+            const data  = {
+            id: this.$props.id,
+            original: this.editOriginal,
+            final: this.editFinal,
+            date: this.editDate,
+            time: this.editTime,
+          };
+
+            axios.post('/index.php/apps/rides/api/0.1/edit', data)
+            .then(response => {
+>>>>>>> 9479ba343e8b5ad4781603f9c489175b67da5966
             console.log(response.data);
         })
         .catch(error => {
@@ -85,7 +101,11 @@
             const id = this.$props.id;
 
            
+<<<<<<< HEAD
             axios.post(`${baseURL}/api/0.1/delete`, id)
+=======
+            axios.post('/index.php/apps/rides/api/0.1/delete', id)
+>>>>>>> 9479ba343e8b5ad4781603f9c489175b67da5966
             .then(response => {
             console.log(response.data);
             }) .catch(error => {
