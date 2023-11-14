@@ -55,39 +55,37 @@
 
         },   
 
-
         saveRide() {
-            const baseURL = window.location.href;
+    const baseURL = window.location.origin + "/index.php/apps/rides"; 
 
+    const data = {
+        id: this.$props.id,
+        original: this.editOriginal,
+        final: this.editFinal,
+        date: this.editDate,
+        time: this.editTime,
+    };
 
-            const data  = {
-            id: this.$props.id,
-            original: this.editOriginal,
-            final: this.editFinal,
-            date: this.editDate,
-            time: this.editTime,
-          };
-
-            axios.post('/apps/rides/api/0.1/edit', data)
-            .then(response => {
+    axios.post(`${baseURL}/api/0.1/edit`, data)
+        .then(response => {
             console.log(response.data);
-            }) .catch(error => {
+        })
+        .catch(error => {
             console.error(error);
-            });
+        });
 
-            this.$router.push({ name : 'MainContent'});
-
-        },
+    this.$router.push({ name: 'MainContent' });
+},
 
         deleteRide() {
 
-            const baseURL = window.location.href;
 
+            const baseURL = window.location.origin + "/index.php/apps/rides"; 
 
             const id = this.$props.id;
 
            
-            axios.post('/apps/rides/api/0.1/delete', id)
+            axios.post(`${baseURL}/api/0.1/delete`, id)
             .then(response => {
             console.log(response.data);
             }) .catch(error => {

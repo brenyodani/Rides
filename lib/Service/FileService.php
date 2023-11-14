@@ -18,13 +18,14 @@ class FileService {
     
     public function readFiles() {
         $currentUser = $this->currentUser->getUID();
-        $jsonDirectory = "/var/www/html/apps/rides/rides/" . $currentUser . '*.json';
-        $jsonData = [];
+       $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/";
+       $jsonDirectory = glob($baseDir . $currentUser . '*.json');
+ 
+       $jsonData = [];
     
         foreach ($jsonDirectory as $file) {
             $fileContent = file_get_contents($file);
-            $decodedData = json_decode($fileContent, false);
-
+            $decodedData = json_decode($fileContent, true); 
             if ($decodedData !== null && !empty($decodedData)) {
                 $jsonData[] = $decodedData;
             }
@@ -32,6 +33,7 @@ class FileService {
     
         return json_encode($jsonData);
     }
+    
     
 
     public function getRideDetails() {
@@ -54,23 +56,30 @@ class FileService {
     }
 
     public function editFiles($data) {
-        
         $currentUser = $this->currentUser->getUID();
-
         $id = $data["id"];
-
-        $fileName = $currentUser . "_" .  $id . ".json";
-        $filePath =   '/var/www/html/apps/rides/rides/' . $fileName;
-        
-        try{  
-        
-        $content = json_encode($data);
-        file_put_contents($filePath,$content);
+        $fileName = $currentUser . "_" . $id . ".json";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/";
+    
+        try {
+            if (!is_dir($baseDir)) {
+                mkdir($baseDir, 0777, true);
+            }
+    
+            $filePath = $baseDir . $fileName;
+            
+            $content = json_encode($data);
+    
+            if (file_exists($filePath)) {
+                file_put_contents($filePath, $content);
+            } else {
+                file_put_contents($filePath, $content);
+            }
         } catch (\Exception $e) {
             echo "Error: " . $e->getMessage();
         }
-
     }
+    
 
 
 
@@ -80,14 +89,14 @@ class FileService {
         $id = $data;
 
         $fileName = $currentUser . "_" .  $id . ".json";
-        $filePath =   '/var/www/html/apps/rides/rides/' . $fileName;
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/" . $fileName;
         
         try{
-            if (!unlink($filePath)) { 
-                echo ("$filePath cannot be deleted due to an error"); 
+            if (!unlink($baseDir)) { 
+                echo ("$baseDir cannot be deleted due to an error"); 
             } 
             else { 
-                echo ("$filePath has been deleted"); 
+                echo ("$baseDir has been deleted"); 
             } 
         } catch (\Exception $e) {
             echo "Error: " . $e->getMessage();
