@@ -27,6 +27,38 @@
           </template>
         </NcListItem>
       </ul>
+
+    <div>
+      <ul>
+        <NcListItem
+          v-for="(item, index) in externalJsonResponse"
+          :key="item.id"
+          :name="item.id"
+          :title="'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time"
+          :to="{ name: 'RideDetails', params: { id: item.id, original: item.original, final: item.final, date: item.date, time: item.time }}"
+
+        >
+          <template>
+            <div>{{ 'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
+          </template>
+          <template #actions>
+            <NcActions :inline="2">
+              <NcActionButton @click="editItem(item.id)">
+                <template #icon>
+                  <Pencil :size="20" />
+                </template>
+              </NcActionButton>
+              <NcActionButton @click="deleteItem(index)">
+                <template #icon>
+                  <Delete :size="20" />
+                </template>
+              </NcActionButton>
+            </NcActions>
+          </template>
+        </NcListItem>
+      </ul>
+    <button @click="loginBesserMitFahren()">Get Logged In External Data</button>
+  </div>
     </div>
   </template>
   
@@ -52,12 +84,18 @@
       return {
         jsonData: [],
         items: [],
-        jsonResponse: {}
+        jsonResponse: {},
+        externalData: [],
+        externalResponse: {},
+        externalLoginData: [],
+        data: {},
+        externalJsonResponse: {}
       };
     },
 
     mounted() {
 
+      var authorUrl = OC.generateUrl('/apps/rides/rides/');
   
         axios({
           method: 'GET',
@@ -89,18 +127,34 @@
    
 
     methods: {
-      fetchData() {
-      },
-
       
-      editItem() {
-      },
-      deleteItem() {
-     },
+    loginBesserMitFahren() {
+        axios({
+          method: 'GET',
+          url:'/index.php/apps/rides/loginbessermitfahren',
+          headers: {
+            'Accept': 'application/json',
+            "Content-Encoding": "application/json"
+          },
 
-     cleanResponse() {
 
-     }
+        }).then((response) => {
+
+          this.externalLoginData = response.data;
+          let lastBraceIndex = this.externalLoginData.lastIndexOf('}');
+          if (lastBraceIndex !== -1) {
+          const cleanedData = this.externalLoginData.substring(0, lastBraceIndex + 1);
+          const afterCleanedData = cleanedData.replace(/\}(?=[^\}]*\})/g, '},');
+          
+          this.externalJsonResponse = JSON.parse(`[${afterCleanedData}]`);
+          }
+          console.log(this.externalJsonResponse);
+
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
  
     },
   };
@@ -121,3 +175,4 @@
   }
   </style>
   
+

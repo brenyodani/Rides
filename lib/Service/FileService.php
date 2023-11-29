@@ -16,12 +16,13 @@ class FileService {
     }
 
     
+    // getting rides of the logged in user
     public function readFiles() {
         $currentUser = $this->currentUser->getUID();
-       $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/";
-       $jsonDirectory = glob($baseDir . $currentUser . '*.json');
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/";
+        $jsonDirectory = glob($baseDir . $currentUser . '*.json');
  
-       $jsonData = [];
+        $jsonData = [];
     
         foreach ($jsonDirectory as $file) {
             $fileContent = file_get_contents($file);
@@ -35,7 +36,7 @@ class FileService {
     }
     
     
-
+    // getting the input values from frontend
     public function getRideDetails() {
         $request_body = file_get_contents('php://input');
         $data = json_decode($request_body, true);
@@ -55,6 +56,7 @@ class FileService {
         return $data;
     }
 
+    // edit existing ride json
     public function editFiles($data) {
         $currentUser = $this->currentUser->getUID();
         $id = $data["id"];
@@ -82,7 +84,7 @@ class FileService {
     
 
 
-
+    // delete already existing ride
     public function deleteRideFile($data){
 
         $currentUser = $this->currentUser->getUID();
@@ -103,7 +105,235 @@ class FileService {
         }
     }
 
+    // getting user settings from input fields
+    public function getUserSettings() {
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body, true);
+        
+        if ($data !== null) {
+            
+            $response = [
+                'data' => $data,
+            ];
+            header('Content-Type: application/json');
+            echo json_encode($response);
+        } else {
+            http_response_code(400); 
+            echo json_encode(['error' => 'Invalid JSON data']);
+        }
 
+        return $data;    
+    }
+
+    // creating user settiongs json
+    public function createUserSettings($data) {
+        $currentUser = $this->currentUser->getUID();
+        $content = json_encode($data);
+        $decodedContent = json_decode($content, true); 
+        
+        if (!$decodedContent || !isset($decodedContent["serviceName"])) {
+            echo "Error: Invalid data or missing serviceName";
+            return;
+        }
+        
+        $serviceName = $decodedContent["serviceName"];
+        $fileName = $currentUser . "_" . $serviceName . "_settings.json";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
+        $filePath = $baseDir . $fileName;
+        
+        try {
+            if (!file_exists($baseDir)) {
+                mkdir($baseDir, 0777, true); 
+            }
+            if (file_exists($filePath)) {
+               
+                throw new Exception("File already created.");
+
+            }
+            
+            if (!file_exists($filePath)) {
+                file_put_contents($filePath, $content);
+                echo "File created and written successfully";
+            } else {
+                $fileHandle = fopen($filePath, "a+");
+                
+                if ($fileHandle === false) {
+                    throw new Exception("Failed to open the file for writing.");
+                }
+                
+                if (fwrite($fileHandle, $content) === false) {
+                    throw new Exception("Failed to write data to the file.");
+                }
+                
+                fclose($fileHandle);
+                echo "Data appended to the existing file successfully";
+            }
+        } catch (\Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+    
+
+    
+    // getting rides of the logged in user
+    public function readUserSettings() {
+
+        $currentUser = $this->currentUser->getUID();
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
+        $jsonDirectory = glob($baseDir . $currentUser . '*_settings.json');
+    
+        $jsonData = [];
+    
+        foreach ($jsonDirectory as $file) {
+            $fileContent = file_get_contents($file);
+            $decodedData = json_decode($fileContent); 
+            if ($decodedData !== null && !empty($decodedData)) {
+                $jsonData[] = $decodedData;
+            }
+        }
+    
+        return json_encode($jsonData);
+    }
+
+
+    public function getUserApiSettings() {
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body, true);
+    
+        if ($data !== null) {
+          
+            $response = [
+                'message' => 'Data received successfully',
+                'receivedData' => $data,
+            ];
+            header('Content-Type: application/json');
+            echo json_encode($response);
+        } else {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid JSON data']);
+        }
+        return $data;
+    }
+
+
+    // saving API endpoints for API calls 
+    public function saveUserApiSettings($data) {
+
+        $currentUser = $this->currentUser->getUID();
+        $content = json_encode($data);
+        $decodedContent = json_decode($content, true); 
+        
+        $fileName = $currentUser . "_apisettings.json";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
+        $filePath = $baseDir . $fileName;
+        
+        try {
+            if (!file_exists($baseDir)) {
+                mkdir($baseDir, 0777, true); 
+            }
+            
+            if (!file_exists($filePath)) {
+                file_put_contents($filePath, $content);
+                return "File created and written successfully";
+            } else {
+                $fileHandle = fopen($filePath, "w+");
+                
+                if ($fileHandle === false) {
+                    throw new Exception("Failed to open the file for writing.");
+                }
+                
+                if (fwrite($fileHandle, $content) === false) {
+                    throw new Exception("Failed to write data to the file.");
+                }
+                
+                fclose($fileHandle);
+                return "Data appended to the existing file successfully";
+            }
+        } catch (\Exception $e) {
+            return "Error: " . $e->getMessage();
+        }
+
+    }
+
+
+    public function getBmfSettings() {
+
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body, true);
+    
+        if ($data !== null) {
+          
+            $response = [
+                'message' => 'Data received successfully',
+                'receivedData' => $data,
+            ];
+            header('Content-Type: application/json');
+            echo json_encode($response);
+        } else {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid JSON data']);
+        }
+        return $data;
+    }
+
+
+
+    public function saveBmfSettings($data) {
+
+        $currentUser = $this->currentUser->getUID();
+        $content = json_encode($data);
+        $decodedContent = json_decode($content, true); 
+
+        $fileName = $currentUser . "_bmfsettings.json";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
+        $filePath = $baseDir . $fileName;
+        
+                
+        try {
+            if (!file_exists($baseDir)) {
+                mkdir($baseDir, 0777, true); 
+            }
+            
+            if (!file_exists($filePath)) {
+                file_put_contents($filePath, $content);
+                return "File created and written successfully";
+            } else {
+                $fileHandle = fopen($filePath, "w+");
+                
+                if ($fileHandle === false) {
+                    throw new Exception("Failed to open the file for writing.");
+                }
+                
+                if (fwrite($fileHandle, $content) === false) {
+                    throw new Exception("Failed to write data to the file.");
+                }
+                
+                fclose($fileHandle);
+                return "Data appended to the existing file successfully";
+            }
+        } catch (\Exception $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
+
+    public function readBmfSettings(){
+        
+        $currentUser = $this->currentUser->getUID();
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
+        $jsonDirectory = glob($baseDir . $currentUser . '*_bmfsettings.json');
+    
+        $jsonData = [];
+    
+        foreach ($jsonDirectory as $file) {
+            $fileContent = file_get_contents($file);
+            $decodedData = json_decode($fileContent); 
+            if ($decodedData !== null && !empty($decodedData)) {
+                $jsonData[] = $decodedData;
+            }
+        }
+    
+        return json_encode($jsonData);
+    }
 
 }
 

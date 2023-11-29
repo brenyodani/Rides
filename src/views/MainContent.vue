@@ -3,8 +3,10 @@
       <div class="create">
         <h1>Ride listing</h1>
 
+        
+
       </div>
-      <ul>
+      <ul :key="$route.fullPath">
         <NcListItem
           v-for="(item, index) in jsonResponse"
           :key="item.id"
@@ -31,7 +33,40 @@
           </template>
         </NcListItem>
       </ul>
+
+      <div>
+      <ul>
+        <NcListItem
+          v-for="(item, index) in externalJsonResponse"
+          :key="item.id"
+          :name="item.id"
+          :title="'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time"
+          :to="{ name: 'RideDetails', params: { id: item.id, original: item.original, final: item.final, date: item.date, time: item.time }}"
+
+        >
+          <template>
+            <div>{{ 'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
+          </template>
+          <template #actions>
+            <NcActions :inline="2">
+              <NcActionButton @click="editItem(item.id)">
+                <template #icon>
+                  <Pencil :size="20" />
+                </template>
+              </NcActionButton>
+              <NcActionButton @click="deleteItem(index)">
+                <template #icon>
+                  <Delete :size="20" />
+                </template>
+              </NcActionButton>
+            </NcActions>
+          </template>
+        </NcListItem>
+      </ul>
+    <button @click="loginBesserMitFahren()">Get Logged In External Data</button>
+  </div>
     </div>
+
   </template>
   
 
@@ -71,7 +106,12 @@ import { generateUrl } from "@nextcloud/router"
         items: [],
         jsonResponse: {},
         jsonData: [],
-
+        componentKey: 0,
+        externalData: [],
+        externalResponse: {},
+        externalLoginData: [],
+        data: {},
+        externalJsonResponse: {}
      
      
       };
@@ -106,58 +146,17 @@ import { generateUrl } from "@nextcloud/router"
           .catch((error) => {
             console.error(error);
           });
+
+
+          
     },
 
     methods: {
-      addItem() {
 
-
-        if (this.input1 && this.input2 && this.input3 && this.input4) {
-          const id = Date.now();
-          const newItem = {
-            id: id,
-            original: this.input1,
-            final: this.input2,
-            date: this.input3,
-            time: this.input4,
-          };
-
-          this.items.push(newItem);
-         
-        }
-      
-        const data  = {
-            id: 1,
-            original: this.input1,
-            final: this.input2,
-            date: this.input3,
-            time: this.input4,
-          };
-
-
-        axios.post('api/0.1/rides', data)
-        .then(response => {
-          console.log(response.data);
-        }) .catch(error => {
-          console.log(baseUrl + '/api/0.1/get');
-
-          console.error(error);
-        });
-
-        this.input1 = "";
-        this.input2 = "";
-        this.input3 = "";
-        this.input4 = "";
-
-
-
-      const baseUrl = `${generateUrl("apps/rides")}/webapp`
-      console.log(baseUrl + '/api/0.1/get');
-      },
-  
-      deleteItem(id) {
-
-      },
+      forceRerender() {
+      this.componentKey += 1;
+    },
+    
   
       editItem(id) {
         const item = this.items.find(item => item.id === id);      
@@ -177,7 +176,34 @@ import { generateUrl } from "@nextcloud/router"
       },
 
     
+      loginBesserMitFahren() {
+        axios({
+          method: 'GET',
+          url:'/index.php/apps/rides/loginbessermitfahren',
+          headers: {
+            'Accept': 'application/json',
+            "Content-Encoding": "application/json"
+          },
 
+
+        }).then((response) => {
+
+          this.externalLoginData = response.data;
+          let lastBraceIndex = this.externalLoginData.lastIndexOf('}');
+          if (lastBraceIndex !== -1) {
+          const cleanedData = this.externalLoginData.substring(0, lastBraceIndex + 1);
+          const afterCleanedData = cleanedData.replace(/\}(?=[^\}]*\})/g, '},');
+          
+          this.externalJsonResponse = JSON.parse(`[${afterCleanedData}]`);
+          }
+          console.log(this.externalJsonResponse);
+
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+ 
      
 
 

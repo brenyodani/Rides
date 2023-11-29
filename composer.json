@@ -34,5 +34,16 @@
 		"platform": {
 			"php": "7.4"
 		}
+	},
+	"require": {
+		"vlucas/phpdotenv": "^5.6",
+		"symfony/finder": "^5.4",
+		"symfony/browser-kit": "*",
+		"symfony/http-client": "^5.4",
+		"symfony/dom-crawler": "^5.4",
+		"acmephp/core": "^2.1",
+		"symfony/panther": "^1.1",
+		"dbrekelmans/bdi": "^1.1",
+		"lib-zip-libzip": "*"		
 	}
 }

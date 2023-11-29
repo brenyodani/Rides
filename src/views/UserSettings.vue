@@ -1,30 +1,49 @@
 <template>
     <div>
+      <div>
+        <p v-if="errors.length">
+          <b>Correct the following errors:</b>
+            <ul>
+              <li v-for="error in errors">{{ error }}</li>
+            </ul>
+        </p>
+      </div>
+
       <div class="create">
         <h1>User settings</h1>
-        <input v-model="input1" placeholder="Service name" />
-        <input v-model="input2" placeholder="Username" />
-        <input v-model="input3" placeholder="Password" />
-        <input v-model="input4" placeholder="API key" />
+        <input v-model="serciveNameInput" placeholder="Service name" />
+        <input v-model="userNameInput" placeholder="Agency ID" />
+        <input v-model="passwordInput" placeholder="Deeplink" />
+        <input v-model="apiKeyInput" placeholder="API key" />
         <button @click="saveSettings">Save</button>
       </div>
-  
-      <div class="radio-checkboxes" v-if="settingsSaved">
-        <label v-for="(checkbox, index) in checkboxes" :key="index">
-          <input type="checkbox" v-model="selectedCheckboxes" :value="checkbox.value" @change="checkAll(checkbox.value)" />
-          {{ checkbox.label }}
-        </label>
-  
-        <label v-for="(inputValue, index) in savedInputValues" :key="index">
-          <input type="checkbox" v-model="selectedCheckboxes" :value="inputValue" />
-          {{ inputValue }}
-        </label>
+      
+      <div class="create">
+        <h1>Bessermitfahren login details</h1>
+        <input v-model="email" placeholder="Email address" type="email" />
+        <input v-model="password" placeholder="Password"  type="password" />
+        <button @click="saveBMFSettings">Save</button>
       </div>
+      
+
+      <div>
+        <NcCheckboxRadioSwitch v-for="(item, index) in jsonResponse" :key="item.serviceName"  :checked.sync="enabledServices" :value="item.serviceName" name="enabledServices">
+        {{ item.serviceName }}
+      </NcCheckboxRadioSwitch>
+      <button @click="saveApiConnections">Save Api endpoints</button>
+
+	    </div>
+
+      <div>
+        {{ enabledServices }}
+      </div>
+      
     </div>
   </template>
   
   <script>
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import axios from 'axios';
 
   export default {
     name: "UserSettings",
@@ -33,32 +52,107 @@ import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadi
     },
     data() {
       return {
-        input1: "",
-        input2: "",
-        input3: "",
-        input4: "",
-        selectedCheckboxes: [],
-        checkboxes: [
-          { label: "All", value: "all" },
-        ],
+        serciveNameInput: "",
+        userNameInput: "",
+        passwordInput: "",
+        apiKeyInput: "",
         settingsSaved: false,
-        savedInputValues: [] 
+        savedInputValues: [],
+        errors: [],
+        jsonData: [],
+        jsonResponse: {},
+        enabledServices: [],
+        email: "",
+        password: ""
       };
     },
+
+    mounted() {
+
+
+      axios({
+          method: 'GET',
+          url:'api/0.1/getusersettings',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept-Encoding': 'application/json'
+          },
+
+
+        }).then((response) => {
+            this.jsonData = response.data
+           
+            const startingBracket = this.jsonData.indexOf("[");
+            const closingBracket = this.jsonData.indexOf("]");
+
+            const respondeString = this.jsonData.substring(startingBracket + 1, closingBracket);
+            const jsonResponse = JSON.parse(`[${respondeString}]`);
+            console.log(jsonResponse);
+            
+            this.jsonResponse = jsonResponse
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+    },
+
+
     methods: {
       saveSettings() {
-        console.log("User settings saved.");
-        this.settingsSaved = true;
-  
-        if (this.input1) {
-          this.savedInputValues.push(this.input1);
-        }
+
+        const userSettings = {
+          serviceName : this.serciveNameInput,
+          userName : this.userNameInput,
+          password: this.passwordInput,
+          apiKey: this.apiKeyInput
+        };
+
+        this.savedInputValues.push(userSettings);
+
+
+        axios.post('/index.php/apps/rides/api/0.1/settings', userSettings)
+        .then(response => {
+          console.log(response.data);
+        }) .catch(error => {
+          console.log(error);
+        });
+
+        this.$router.push({ name : 'MainContent'});
+
       },
-      checkAll(checkboxValue) {
-        if (checkboxValue === 'all') {
-          this.selectedCheckboxes = [...this.checkboxes.map(item => item.value), ...this.savedInputValues];
-        }
-      }
+
+      saveApiConnections() {   
+
+      const services = JSON.stringify(this.enabledServices);
+
+      console.log(services);
+
+      axios.post('/index.php/apps/rides/api/0.1/savesettings', services)
+      .then(response => {
+        console.log(response.data);
+      }).catch(error => {
+        console.log(error); 
+      });
+},
+
+      saveBMFSettings() {
+        const bmfSettings = {
+          email : this.email,
+          password: this.password
+        };
+
+        axios.post('/index.php/apps/rides/api/0.1/savebmfsettings', bmfSettings)
+        .then(response => {
+          console.log(response.data)
+        }).catch(error => {
+          console.log(error);
+        })
+
+
+
+
+      },
+
     }
   };
   </script>

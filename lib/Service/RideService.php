@@ -59,8 +59,9 @@ class RideService {
         $currentUser = $this->currentUser -> getUID();
 
         $fileName = $currentUser . "_" .  $id . ".json";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/";
 
-        $filePath =   '/var/www/html/apps/rides/rides/' . $fileName;
+        $filePath =   $baseDir . $fileName;
         $data["id"] = $id;
         $content = json_encode($data);
 
@@ -101,7 +102,7 @@ class RideService {
 
 
     public function checkID($id) {
-        $filePath = '/var/www/html/apps/rides/rides/id.txt'; 
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/id.txt";
         try {
 
             $ids = file_get_contents($filePath);
@@ -123,9 +124,9 @@ class RideService {
     
     
     public function deleteID($content) {
-        $filePath = '/var/www/html/apps/rides/rides/id.txt';
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/id.txt";
     
-        $id = strval($content["id"]);
+        ;
     
         try {
             $ids = file_get_contents($filePath);
@@ -133,20 +134,27 @@ class RideService {
             $idArray = explode('/', trim($ids));
     
             foreach($idArray as $key => $value) {
+               
+                $trimmedValue = trim($value);
                 
-                if($id == $value) {
+                if(strval($content) === $trimmedValue) {
                     unset($idArray[$key]);
                 }
+
             }
-
+    
             file_put_contents($filePath, implode('/', $idArray));
-
-
+            error_log('ID deleted successfully.');
+    
         } catch (\Exception $e) {
             echo "Error: " . $e->getMessage();
+            error_log('Error: ' . $e->getMessage());
         }
     }
     
+
+  
+
 
     }
     

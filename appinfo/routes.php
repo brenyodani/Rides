@@ -20,7 +20,7 @@ return [
 
 	'routes' => [
 		
-		// basic main page route 
+		// Start of the application, calls the main template where Vue.js is getting rendered
 		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
 		
 		
@@ -28,11 +28,26 @@ return [
 		
 		
 		// API routes 
+		// Saves ride to json file 
 		['name' => 'rides_api#setridedetails', 'url' => '/api/0.1/rides', 'verb' => 'POST'],
-
+		// Listing out all rides from files
 		['name' => 'rides_api#getrides', 'url' => '/api/0.1/get', 'verb' => 'GET'],
+		// Editing existing ride file
 		['name' => 'rides_api#editride', 'url' => '/api/0.1/edit', 'verb' => 'POST'],
+		// Deleting selected ride
 		['name' => 'rides_api#deleteride', 'url' => '/api/0.1/delete', 'verb' => 'POST'],
+		// Save user settings into json
+		['name' => 'rides_api#createusersettings', 'url' => '/api/0.1/settings', 'verb' => 'POST'],
+		// Listing out user settings 
+		['name' => 'rides_api#getusersettings', 'url' => '/api/0.1/getusersettings', 'verb' => 'GET'],
+		// Saving user api settings 
+		['name' => 'rides_api#saveuserapisettings', 'url' => '/api/0.1/savesettings', 'verb' => 'POST'],
+		// Saving bessermitfahren.de login details
+		['name' => 'rides_api#savebmfsettings', 'url' => '/api/0.1/savebmfsettings', 'verb' => 'POST'],
+		// Web Scraping api point
+		['name' => 'webscrape#loginbessermitfahren', 'url' => '/loginbessermitfahren', 'verb' => 'GET'],
+
+
 
 		]
 ];
