@@ -20,11 +20,18 @@
       
       <div class="create">
         <h1>Bessermitfahren login details</h1>
-        <input v-model="email" placeholder="Email address" type="email" />
-        <input v-model="password" placeholder="Password"  type="password" />
+        <input v-model="emailBmf" placeholder="Email address" type="email" />
+        <input v-model="passwordBmf" placeholder="Password"  type="password" />
         <button @click="saveBMFSettings">Save</button>
       </div>
       
+      <div class="create">
+        <h1>Ride2Go login details</h1>
+        <input v-model="emailr2g" placeholder="Email address" type="email" />
+        <input v-model="passwordr2g" placeholder="Password"  type="password" />
+        <button @click="saveR2GSettings">Save</button>
+      </div>
+
 
       <div>
         <NcCheckboxRadioSwitch v-for="(item, index) in jsonResponse" :key="item.serviceName"  :checked.sync="enabledServices" :value="item.serviceName" name="enabledServices">
@@ -62,8 +69,10 @@ import axios from 'axios';
         jsonData: [],
         jsonResponse: {},
         enabledServices: [],
-        email: "",
-        password: ""
+        emailBmf: "",
+        passwordBmf: "",
+        emailr2g: "",
+        passwordr2g: ""
       };
     },
 
@@ -137,8 +146,8 @@ import axios from 'axios';
 
       saveBMFSettings() {
         const bmfSettings = {
-          email : this.email,
-          password: this.password
+          email : this.emailBmf,
+          password: this.passwordBmf
         };
 
         axios.post('/index.php/apps/rides/api/0.1/savebmfsettings', bmfSettings)
@@ -147,12 +156,24 @@ import axios from 'axios';
         }).catch(error => {
           console.log(error);
         })
-
-
-
-
       },
 
+
+      saveR2GSettings() {
+
+        const r2gSettings = {
+          email : this.emailr2g,
+          password: this.passwordr2g
+        }
+
+
+        axios.post('/index.php/apps/rides/api/0.1/saver2gsettings', r2gSettings)
+        .then(response => {
+          console.log(response.data);
+        }). catch(error => {
+          console.log(error);
+        })
+      },
     }
   };
   </script>

@@ -47,31 +47,8 @@ class RidesApiController extends ApiController
         $id = $this->rideService->createId();
         $this->rideService->checkID($id);
 
-        $enabledServices = $this->apiService->getEnabledServices();
-        $apiServiceDetails = $this->apiService->getApiServiceDetails($enabledServices);
-
-        $apiUrl = "https://amarillo-dev.mfdz.de/carpool/";
-
-        $header = $this->apiService->getHeader($apiServiceDetails["apiKey"]);
-        $body = $this->apiService->getBody(
-            strval($id),
-            $apiServiceDetails["userName"],
-            $apiServiceDetails["password"],
-            $content["original"],
-            $content["final"],
-            $content["date"],
-            $content["time"] 
-    );
-
-
-    $curl = $this->apiService->callAmarilloRides($apiUrl, $body, $header);
-
-    if(http_response_code() === 200) {
         $this->rideService->createRideFile($content, $id);
-        return $curl;
-    } else {
-        throw new Exception("Something went wrong");
-    }
+
 }
 
     /**
@@ -94,30 +71,9 @@ class RidesApiController extends ApiController
 
         $data = $this->fileService->getRideDetails();
 
-        $enabledServices = $this->apiService->getEnabledServices();
-        $apiServiceDetails = $this->apiService->getApiServiceDetails($enabledServices);
-
-        $apiUrl = "https://amarillo-dev.mfdz.de/carpool/";
-
-        $header = $this->apiService->getHeader($apiServiceDetails["apiKey"]);
-        $body = $this->apiService->getBody(
-            strval($data["id"]),
-            $apiServiceDetails["userName"],
-            $apiServiceDetails["password"],
-            $data["original"],
-            $data["final"],
-            $data["date"],
-            $data["time"] 
-            );
-
-        $curl = $this->apiService->callAmarilloRides($apiUrl, $body, $header);
-
-
-
-        if(http_response_code() === 200) {
+      
             $this->fileService->editFiles($data);
             return "File edited succesfully";
-        }
 
     }
 
@@ -129,26 +85,12 @@ class RidesApiController extends ApiController
     public function deleteRide() {
         
 
-        $enabledServices = $this->apiService->getEnabledServices();
-        $apiServiceDetails = $this->apiService->getApiServiceDetails($enabledServices);
-        $apiKey = $apiServiceDetails["apiKey"];
-        $header = $this->apiService->getDeleteHeader($apiKey);
-
-
-
         $content = $this->fileService->getRideDetails();
-        $apiUrl = "https://amarillo-dev.mfdz.de/carpool/" . $apiServiceDetails["userName"] . "/" . $content;
-
-
-        $this->apiService->deleteAmarilloRide($apiUrl, $apiKey, $header);
-
-        if(http_response_code() === 200) {
-            return "Ride deleted succesfully";
+    
             $this->fileService->deleteRideFile($content);
             $this->rideService->deleteID($content);
-        } else {
-            return "something went wrong";
-        }
+            return "Ride deleted succesfully";
+
 
     
     }
@@ -194,7 +136,18 @@ class RidesApiController extends ApiController
         $this->fileService->saveBmfSettings($data);
     }
 
+
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function saveR2GSettings() {
+        $data = $this->fileService->getR2GSettings();
+        $this->fileService->saveR2GSettings($data);
+    }
+
 }
+
 
 
 

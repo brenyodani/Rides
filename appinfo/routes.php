@@ -44,10 +44,16 @@ return [
 		['name' => 'rides_api#saveuserapisettings', 'url' => '/api/0.1/savesettings', 'verb' => 'POST'],
 		// Saving bessermitfahren.de login details
 		['name' => 'rides_api#savebmfsettings', 'url' => '/api/0.1/savebmfsettings', 'verb' => 'POST'],
-		// Web Scraping api point
+		// Saving r2g login details
+		['name' => 'rides_api#saver2gsettings', 'url' => '/api/0.1/saver2gsettings', 'verb' => 'POST'],
+
+		// Web Scraping bessermitfahren 
 		['name' => 'webscrape#loginbessermitfahren', 'url' => '/loginbessermitfahren', 'verb' => 'GET'],
+		// Scraping Ride2Go 
+		['name' => 'webscrape#loginr2g', 'url' => '/loginride2go', 'verb' => 'GET'],
+		
 
 
-
+		
 		]
 ];

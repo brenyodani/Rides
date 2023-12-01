@@ -46,7 +46,6 @@ class FileService {
             $response = [
                 'data' => $data,
             ];
-            header('Content-Type: application/json');
             echo json_encode($response);
         } else {
             http_response_code(400); 
@@ -115,7 +114,6 @@ class FileService {
             $response = [
                 'data' => $data,
             ];
-            header('Content-Type: application/json');
             echo json_encode($response);
         } else {
             http_response_code(400); 
@@ -206,7 +204,6 @@ class FileService {
                 'message' => 'Data received successfully',
                 'receivedData' => $data,
             ];
-            header('Content-Type: application/json');
             echo json_encode($response);
         } else {
             http_response_code(400);
@@ -267,7 +264,6 @@ class FileService {
                 'message' => 'Data received successfully',
                 'receivedData' => $data,
             ];
-            header('Content-Type: application/json');
             echo json_encode($response);
         } else {
             http_response_code(400);
@@ -335,7 +331,99 @@ class FileService {
         return json_encode($jsonData);
     }
 
+
+
+    // handling r2g login details get details->save details->use details
+
+
+    public function getR2GSettings() {
+
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body, true);
+    
+        if ($data !== null) {
+          
+            $response = [
+                'message' => 'Data received successfully',
+                'receivedData' => $data,
+            ];
+            echo json_encode($response);
+        } else {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid JSON data']);
+        }
+        return $data;
+    }
+
+
+
+    public function saveR2GSettings($data) {
+
+        $currentUser = $this->currentUser->getUID();
+        $content = json_encode($data);
+        $decodedContent = json_decode($content, true); 
+
+        $fileName = $currentUser . "_r2gsettings.json";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
+        $filePath = $baseDir . $fileName;
+        
+                
+        try {
+            if (!file_exists($baseDir)) {
+                mkdir($baseDir, 0777, true); 
+            }
+            
+            if (!file_exists($filePath)) {
+                file_put_contents($filePath, $content);
+                return "File created and written successfully";
+            } else {
+                $fileHandle = fopen($filePath, "w+");
+                
+                if ($fileHandle === false) {
+                    throw new Exception("Failed to open the file for writing.");
+                }
+                
+                if (fwrite($fileHandle, $content) === false) {
+                    throw new Exception("Failed to write data to the file.");
+                }
+                
+                fclose($fileHandle);
+                return "Data appended to the existing file successfully";
+            }
+        } catch (\Exception $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
+
+
+    public function readR2GSettings(){
+        
+        $currentUser = $this->currentUser->getUID();
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
+        $jsonDirectory = glob($baseDir . $currentUser . '*_r2gsettings.json');
+    
+        $jsonData = [];
+    
+        foreach ($jsonDirectory as $file) {
+            $fileContent = file_get_contents($file);
+            $decodedData = json_decode($fileContent); 
+            if ($decodedData !== null && !empty($decodedData)) {
+                $jsonData[] = $decodedData;
+            }
+        }
+    
+        return json_encode($jsonData);
+    }
+
+
+
+
+
 }
+
+
+
+
 
 
 

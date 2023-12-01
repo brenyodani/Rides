@@ -54,6 +54,20 @@ class WebscrapeController extends Controller {
        header('Content-Type: application/json');
        echo $scrapedData;
     }
+
+      /**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+    public function loginR2G() {
+
+       $data = $this->fileService->readR2GSettings();
+       $scrapedData = $this->webScraper->loginRide2Go($data);
+
+       return $scrapedData;
+    }
+
+
 }
 
 

@@ -79,7 +79,7 @@ class ApiService {
         $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
         $jsonDirectory = glob($baseDir . $currentUser . '_apisettings.json');
     
-        $jsonData ;
+        $jsonData = [] ;
     
         foreach ($jsonDirectory as $file) {
             $fileContent = file_get_contents($file);
@@ -100,7 +100,7 @@ class ApiService {
         $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
         $jsonFile = glob($baseDir . $currentUser . '*_settings.json');
     
-        $returnData = [];
+        $returnData = "";
 
         foreach($jsonFile as $file) {
             $fileContent = file_get_contents($file);
@@ -110,7 +110,7 @@ class ApiService {
             } 
         }
 
-        $decodedArray = get_object_vars($returnData);
+        $decodedArray = json_encode(array($returnData));
 
         return $decodedArray;
     

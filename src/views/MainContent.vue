@@ -6,6 +6,7 @@
         
 
       </div>
+      <div>
       <ul :key="$route.fullPath">
         <NcListItem
           v-for="(item, index) in jsonResponse"
@@ -33,15 +34,49 @@
           </template>
         </NcListItem>
       </ul>
-
+    </div>
       <div>
+        <h2>Bessermitfahren</h2>
       <ul>
         <NcListItem
-          v-for="(item, index) in externalJsonResponse"
+          v-for="(item, index) in externalResponse"
           :key="item.id"
           :name="item.id"
           :title="'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time"
-          :to="{ name: 'RideDetails', params: { id: item.id, original: item.original, final: item.final, date: item.date, time: item.time }}"
+          :to="{ name: 'RideDetails', params: {  original: item.original, final: item.final, date: item.date, time: item.time }}"
+
+        >
+          <template>
+            <div>{{ 'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
+          </template>
+          <template #actions>
+            <NcActions :inline="2">
+              <NcActionButton @click="editItem(item.origin)">
+                <template #icon>
+                  <Pencil :size="20" />
+                </template>
+              </NcActionButton>
+              <NcActionButton @click="deleteItem(item.origin)">
+                <template #icon>
+                  <Delete :size="20" />
+                </template>
+              </NcActionButton>
+            </NcActions>
+          </template>
+        </NcListItem>
+      </ul>
+    <button @click="loginBesserMitFahren()">Get Logged In External Data</button>
+  </div>
+
+    <div>
+      <h2>Ride2Go</h2>
+      <ul>
+        <NcListItem
+          v-for="(item, index) in ride2GoJsonResponse"
+          :key="item.origin"
+          :name="item.origin"
+          :title="'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time"
+          :to="{ name: 'RideDetails', params: {  original: item.original, final: item.final, date: item.date, time: item.time }}"
 
         >
           <template>
@@ -63,8 +98,8 @@
           </template>
         </NcListItem>
       </ul>
-    <button @click="loginBesserMitFahren()">Get Logged In External Data</button>
-  </div>
+      <button @click="loginR2G()">Scrape r2g</button>
+    </div>
     </div>
 
   </template>
@@ -111,8 +146,10 @@ import { generateUrl } from "@nextcloud/router"
         externalResponse: {},
         externalLoginData: [],
         data: {},
-        externalJsonResponse: {}
-     
+        externalJsonResponse: {},
+        ride2GoData: {},
+        ride2GoResponse: {},
+        ride2GoJsonResponse: {}
      
       };
     },
@@ -146,7 +183,6 @@ import { generateUrl } from "@nextcloud/router"
           .catch((error) => {
             console.error(error);
           });
-
 
           
     },
@@ -194,17 +230,44 @@ import { generateUrl } from "@nextcloud/router"
           const cleanedData = this.externalLoginData.substring(0, lastBraceIndex + 1);
           const afterCleanedData = cleanedData.replace(/\}(?=[^\}]*\})/g, '},');
           
-          this.externalJsonResponse = JSON.parse(`[${afterCleanedData}]`);
+          this.externalResponse = JSON.parse(`[${afterCleanedData}]`);
           }
-          console.log(this.externalJsonResponse);
+          console.log(this.externalResponse);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      },
+
+      loginR2G() {
+         
+        axios({
+          method: 'GET',
+          url:'/index.php/apps/rides/loginride2go',
+          headers: {
+            'Accept': 'application/json',
+            "Content-Encoding": "application/json"
+          },
+
+
+        }).then((response) => {
+
+          this.ride2GoData = response.data;
+          let lastBraceIndex = this.ride2GoData.lastIndexOf('}');
+          if (lastBraceIndex !== -1) {
+          const cleanedData = this.ride2GoData.substring(0, lastBraceIndex + 1);
+          const afterCleanedData = cleanedData.replace(/\}(?=[^\}]*\})/g, '},');
+          
+          this.ride2GoJsonResponse = JSON.parse(`[${afterCleanedData}]`);
+          }
 
           })
           .catch((error) => {
             console.error(error);
           });
+
+
       }
- 
-     
 
 
     },
