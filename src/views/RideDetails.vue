@@ -89,11 +89,11 @@
             axios.post(`${baseURL}/api/0.1/delete`, id)
             .then(response => {
             console.log(response.data);
+            this.$router.push({ name : 'MainContent'});
             }) .catch(error => {
             console.error(error);
             });
 
-            this.$router.push({ name : 'MainContent'});
 
         },
         }

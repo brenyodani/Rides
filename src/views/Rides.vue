@@ -21,7 +21,12 @@
           <input type="time" v-model="timeInput" placeholder="Time" @keyup.enter="addItem" />
           <button @click="addItem">Create Ride</button>
         </div>
+
+        <div>
+          <button @click="registerBMF()">Register Ride to BesserMitFahren</button>
+        </div>
       </div>
+      
     </template>
     
     <script>
@@ -82,9 +87,6 @@
       if (!inputsValid) {
         return;
       }
-
-      const baseURL = window.location.href;
-
       
       const data = {
         id: null,
@@ -95,7 +97,6 @@
       };
 
       this.postData(data);
-      this.navigateToMainContent();
     },
 
     // Function to post data using axios
@@ -103,6 +104,8 @@
       axios.post('/index.php/apps/rides/api/0.1/rides', data)
         .then(response => {
           console.log(response.data);
+          this.navigateToMainContent();
+
         })
         .catch(error => {
           console.error(error);
@@ -112,7 +115,44 @@
     // Function to navigate to MainContent
     navigateToMainContent() {
       this.$router.push({ name: 'MainContent' });
-    }
+    },
+
+
+    // registering rides through Bessermitfahren
+    registerBMF() {
+
+      const data = {
+        id: null,
+        original: this.originalInput,
+        final: this.finalInput,
+        date: this.dateInput,
+        time: this.timeInput,
+      };
+
+      
+      this.loading = true;
+      axios({
+        method: 'POST',
+        url:'/index.php/apps/rides/registerbessermitfahren',
+        headers: {
+          'Accept': 'application/json',
+          "Content-Encoding": "application/json"
+        },
+        data: data,
+
+
+      }).then((response) => {
+        this.loading = true;
+        console.log(response.data);
+        this.loading = false;
+      })
+        .catch((error) => {
+          console.error(error);
+        });
+
+
+
+},
 
           
   

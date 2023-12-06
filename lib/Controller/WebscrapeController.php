@@ -34,7 +34,7 @@ class WebscrapeController extends Controller {
 
 
 
-     /**
+    /**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
@@ -44,18 +44,18 @@ class WebscrapeController extends Controller {
         return $scrapedData;
     }
 
-     /**
+    /**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
     public function loginBesserMitFahren() {
        $data = $this->fileService->readBmfSettings(); 
        $scrapedData = $this->webScraper->loginBesserMitFahren($data);
-       header('Content-Type: application/json');
-       echo $scrapedData;
+       $this->webScraper->scrapeBesserMitFahren($scrapedData);
+
     }
 
-      /**
+    /**
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
@@ -63,10 +63,21 @@ class WebscrapeController extends Controller {
 
        $data = $this->fileService->readR2GSettings();
        $scrapedData = $this->webScraper->loginRide2Go($data);
+       $this->webScraper->scrapeRide2Go($scrapedData);
 
-       return $scrapedData;
+
     }
 
+    /**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+    public function registerRideBMF() {
+        $data = $this->fileService->readBmfSettings();
+        $scrapedData = $this->webScraper->loginBesserMitFahren($data);
+        $response = $this->webScraper->registerRideBMF($rideData);
+        return $response;
+    }
 
 }
 

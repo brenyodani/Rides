@@ -3,11 +3,13 @@
       <div class="create">
         <h1>Ride listing</h1>
 
-        
+        <div>
+          <NcLoadingIcon  :size="64" v-if="loading"/>
+        </div>
 
       </div>
       <div>
-      <ul :key="$route.fullPath">
+      <ul >
         <NcListItem
           v-for="(item, index) in jsonResponse"
           :key="item.id"
@@ -100,20 +102,22 @@
       </ul>
       <button @click="loginR2G()">Scrape r2g</button>
     </div>
+ 
     </div>
 
+   
   </template>
   
 
 <script>
 
 import axios from 'axios';
-import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import Delete from 'vue-material-design-icons/Delete'
-import Pencil from 'vue-material-design-icons/Pencil'
-import { generateUrl } from "@nextcloud/router"
+import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js';
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js';
+import NcActions from '@nextcloud/vue/dist/Components/NcActions.js';
+import Delete from 'vue-material-design-icons/Delete';
+import Pencil from 'vue-material-design-icons/Pencil';
+import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js';
 
 
 
@@ -129,7 +133,8 @@ import { generateUrl } from "@nextcloud/router"
       NcActionButton,
       NcActions,
       Delete,
-      Pencil
+      Pencil,
+      NcLoadingIcon
     },
   
     data() {
@@ -149,16 +154,40 @@ import { generateUrl } from "@nextcloud/router"
         externalJsonResponse: {},
         ride2GoData: {},
         ride2GoResponse: {},
-        ride2GoJsonResponse: {}
+        ride2GoJsonResponse: {},
+        loading: 'false',
      
       };
     },
   
     created() {
       this.items = this.$route.params.items || [];
+
+      this.$watch( 
+        () => this.$route.params,
+        () => {
+          this.fetchData();
+        },
+        { immediate : true }
+      )
     },
     
     mounted() {
+    
+    },
+
+    methods: {
+
+      forceRerender() {
+      this.componentKey += 1;
+    },
+
+    fetchData() {
+
+
+      this.loading = true;
+
+
       axios({
           method: 'GET',
           url:'api/0.1/get',
@@ -179,6 +208,8 @@ import { generateUrl } from "@nextcloud/router"
             console.log(jsonResponse);
             
             this.jsonResponse = jsonResponse
+
+            this.loading = false;
           })
           .catch((error) => {
             console.error(error);
@@ -186,13 +217,6 @@ import { generateUrl } from "@nextcloud/router"
 
           
     },
-
-    methods: {
-
-      forceRerender() {
-      this.componentKey += 1;
-    },
-    
   
       editItem(id) {
         const item = this.items.find(item => item.id === id);      
@@ -213,6 +237,7 @@ import { generateUrl } from "@nextcloud/router"
 
     
       loginBesserMitFahren() {
+        this.loading = true;
         axios({
           method: 'GET',
           url:'/index.php/apps/rides/loginbessermitfahren',
@@ -233,6 +258,7 @@ import { generateUrl } from "@nextcloud/router"
           this.externalResponse = JSON.parse(`[${afterCleanedData}]`);
           }
           console.log(this.externalResponse);
+          this.loading = false;
           })
           .catch((error) => {
             console.error(error);
@@ -240,7 +266,7 @@ import { generateUrl } from "@nextcloud/router"
       },
 
       loginR2G() {
-         
+         this.loading = true;
         axios({
           method: 'GET',
           url:'/index.php/apps/rides/loginride2go',
@@ -259,6 +285,7 @@ import { generateUrl } from "@nextcloud/router"
           const afterCleanedData = cleanedData.replace(/\}(?=[^\}]*\})/g, '},');
           
           this.ride2GoJsonResponse = JSON.parse(`[${afterCleanedData}]`);
+          this.loading = false;
           }
 
           })
@@ -267,7 +294,10 @@ import { generateUrl } from "@nextcloud/router"
           });
 
 
-      }
+      },
+
+
+     
 
 
     },

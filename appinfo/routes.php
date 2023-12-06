@@ -25,9 +25,6 @@ return [
 		
 		
 		
-		
-		
-		// API routes 
 		// Saves ride to json file 
 		['name' => 'rides_api#setridedetails', 'url' => '/api/0.1/rides', 'verb' => 'POST'],
 		// Listing out all rides from files
@@ -49,6 +46,12 @@ return [
 
 		// Web Scraping bessermitfahren 
 		['name' => 'webscrape#loginbessermitfahren', 'url' => '/loginbessermitfahren', 'verb' => 'GET'],
+		// Registering ride on bessermitfahren
+		['name' => 'webscrape#registerridebmf', 'url' => '/registerbessermitfahren', 'verb' => 'POST'],
+
+		
+		
+		
 		// Scraping Ride2Go 
 		['name' => 'webscrape#loginr2g', 'url' => '/loginride2go', 'verb' => 'GET'],
 		

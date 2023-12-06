@@ -2,7 +2,7 @@
 	<NcContent app-name="Rides">
 	  	<Navigation />
 	  	<NcAppContent>
-			<router-view></router-view>
+			<router-view  :key="$route.fullPath"></router-view>
 		</NcAppContent>
 	</NcContent>
 	
