@@ -416,7 +416,98 @@ class FileService {
     }
 
 
+    public function saveBmfRide($data_array) {
+        
+        $data = json_decode($data_array, true);
 
+        if($data_array === null) {
+            return;
+        }
+
+        $id = $data["id"];        
+        $currentUser = $this->currentUser -> getUID();
+
+        $fileName = $currentUser . "_" . $id . ".json";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/";
+        $filePath =   $baseDir . $fileName;
+
+        try {
+            if (!file_exists($filePath)) {
+                file_put_contents($filePath, $data_array);
+                echo "File created and written successfully";
+            } else {
+
+                $fileHandle = fopen($filePath, "a");
+    
+                if ($fileHandle === false) {
+                    throw new Exception("Failed to open the file for writing.");
+                }
+    
+                if (fwrite($fileHandle, $content) === false) {
+                    throw new Exception("Failed to write data to the file.");
+                }
+    
+                fclose($fileHandle);
+    
+                echo "Data appended to the existing file successfully";
+            }
+        } catch (\Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+    }
+
+
+    public function saveRideR2G($details, $id) {
+
+        $ride_ID = $id["url"];
+        $details["id"] = $ride_ID;
+        $details["agency"] = "R2G";
+
+        $content = json_encode($details);
+
+        if($content === null) {
+            return;
+        }
+
+        $currentUser = $this->currentUser -> getUID();
+
+        $fileName = $currentUser . "_" . $ride_ID . ".json";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/";
+        $filePath =   $baseDir . $fileName;
+
+        try {
+            if (!file_exists($filePath)) {
+                file_put_contents($filePath, $content);
+                echo "File created and written successfully";
+            } else {
+
+                $fileHandle = fopen($filePath, "a");
+    
+                if ($fileHandle === false) {
+                    throw new Exception("Failed to open the file for writing.");
+                }
+    
+                if (fwrite($fileHandle, $content) === false) {
+                    throw new Exception("Failed to write data to the file.");
+                }
+    
+                fclose($fileHandle);
+    
+                echo "Data appended to the existing file successfully";
+            }
+        } catch (\Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+    }
+
+
+    public function deleteRideR2G($id) {
+        
+
+        
+    }
 
 
 }

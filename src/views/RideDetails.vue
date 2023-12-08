@@ -1,9 +1,9 @@
 <template>
     <div class="details" v-if="!editing">
         <h1>Ride Details</h1>
-    
+        <h2>Agency: {{ agency }}</h2>
         <h2>Ride id: {{ id }}</h2>
-        <h2>Original: {{ original }}</h2>
+        <h2>origin: {{ origin }}</h2>
         <h2>Final destination: {{ final }}</h2>
         <h2>Ride date: {{ date }}</h2>
         <h2>Ride time: {{ time }}</h2>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="details" v-else>
-        <input type="text" v-model="editOriginal" placeholder="Original" @keyup.enter="addItem" />
+        <input type="text" v-model="editorigin" placeholder="origin" @keyup.enter="addItem" />
         <input type="text" v-model="editFinal" placeholder="Final" @keyup.enter="addItem" />
         <input type="date" v-model="editDate" placeholder="Date" @keyup.enter="addItem" />
         <input type="time" v-model="editTime" placeholder="Time" @keyup.enter="addItem" />
@@ -31,12 +31,12 @@
 
     export default {
     name: 'RideDetails',
-    props: ['id', 'original', 'final', 'date', 'time'],
+    props: ['id', 'origin', 'final', 'date', 'time', 'agency'],
     
     data(){
         return {
             editing: false,
-            editOriginal: this.original,
+            editorigin: this.origin,
             editFinal: this.final,
             editDate: this.date,
             editTime: this.time,
@@ -61,10 +61,11 @@
 
             const data  = {
             id: this.$props.id,
-            original: this.editOriginal,
+            origin: this.editorigin,
             final: this.editFinal,
             date: this.editDate,
             time: this.editTime,
+            agency: this.agency
           };
 
             axios.post('/index.php/apps/rides/api/0.1/edit', data)

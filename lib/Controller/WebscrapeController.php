@@ -75,10 +75,56 @@ class WebscrapeController extends Controller {
     public function registerRideBMF() {
         $data = $this->fileService->readBmfSettings();
         $scrapedData = $this->webScraper->loginBesserMitFahren($data);
+        
         $response = $this->webScraper->registerRideBMF($rideData);
-        return $response;
+        $this->fileService->saveBmfRide($response);
     }
 
+
+     /**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+    public function registerR2G() {
+        //login to ride2go
+        $data = $this->fileService->readR2GSettings();
+        $scrapedData = $this->webScraper->loginRide2Go($data);
+
+        $details = $this->fileService->getRideDetails();
+        
+        //registering ride 
+        $content = $this->webScraper->registerRideR2G($details);
+        $id_json = $this->webScraper->getIDRide2G($content);
+
+
+        $this->fileService->saveRideR2G($details, $id_json);
+    }
+
+
+
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function saveBmfSettings() {
+        $data = $this->fileService->getBmfSettings();
+        $this->fileService->saveBmfSettings($data);
+    }
+
+
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function saveR2GSettings() {
+        $data = $this->fileService->getR2GSettings();
+        $this->fileService->saveR2GSettings($data);
+    }
+
+
+    public function deleteRideR2G() {
+
+    }
 }
 
 

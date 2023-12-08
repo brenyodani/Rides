@@ -54,7 +54,8 @@ return [
 		
 		// Scraping Ride2Go 
 		['name' => 'webscrape#loginr2g', 'url' => '/loginride2go', 'verb' => 'GET'],
-		
+		// registering rides to r2g
+		['name' => 'webscrape#registerr2g', 'url' => '/registerr2g', 'verb' => 'POST'],
 
 
 		

@@ -3898,7 +3898,7 @@ __webpack_require__.r(__webpack_exports__);
           name: 'RideDetails',
           params: {
             id,
-            original: item.original,
+            origin: item.origin,
             final: item.final,
             date: item.date,
             time: item.time
@@ -3971,11 +3971,11 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'RideDetails',
-  props: ['id', 'original', 'final', 'date', 'time'],
+  props: ['id', 'origin', 'final', 'date', 'time', 'agency'],
   data() {
     return {
       editing: false,
-      editOriginal: this.original,
+      editorigin: this.origin,
       editFinal: this.final,
       editDate: this.date,
       editTime: this.time,
@@ -3995,10 +3995,11 @@ __webpack_require__.r(__webpack_exports__);
       const baseURL = window.location.href;
       const data = {
         id: this.$props.id,
-        original: this.editOriginal,
+        origin: this.editorigin,
         final: this.editFinal,
         date: this.editDate,
-        time: this.editTime
+        time: this.editTime,
+        agency: this.agency
       };
       axios__WEBPACK_IMPORTED_MODULE_0__["default"].post('/index.php/apps/rides/api/0.1/edit', data).then(response => {
         console.log(response.data);
@@ -4044,7 +4045,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {},
   data() {
     return {
-      originalInput: "",
+      originInput: "",
       finalInput: "",
       dateInput: "",
       timeInput: "",
@@ -4057,8 +4058,8 @@ __webpack_require__.r(__webpack_exports__);
     validateInputs() {
       const specialCharRegex = /[^\w\sÉ]/;
       this.errors = [];
-      if (!this.originalInput.trim()) {
-        this.errors.push('Original field cannot be empty');
+      if (!this.originInput.trim()) {
+        this.errors.push('origin field cannot be empty');
       }
       if (!this.finalInput.trim()) {
         this.errors.push('Final field cannot be empty');
@@ -4069,8 +4070,8 @@ __webpack_require__.r(__webpack_exports__);
       if (!this.timeInput.trim()) {
         this.errors.push('Time field cannot be empty');
       }
-      if (specialCharRegex.test(this.originalInput)) {
-        this.errors.push('Original field contains special characters');
+      if (specialCharRegex.test(this.originInput)) {
+        this.errors.push('origin field contains special characters');
       }
       if (specialCharRegex.test(this.finalInput)) {
         this.errors.push('Final field contains special characters');
@@ -4085,7 +4086,7 @@ __webpack_require__.r(__webpack_exports__);
       }
       const data = {
         id: null,
-        original: this.originalInput,
+        origin: this.originInput,
         final: this.finalInput,
         date: this.dateInput,
         time: this.timeInput
@@ -4111,7 +4112,7 @@ __webpack_require__.r(__webpack_exports__);
     registerBMF() {
       const data = {
         id: null,
-        original: this.originalInput,
+        origin: this.originInput,
         final: this.finalInput,
         date: this.dateInput,
         time: this.timeInput
@@ -4120,6 +4121,31 @@ __webpack_require__.r(__webpack_exports__);
       (0,axios__WEBPACK_IMPORTED_MODULE_0__["default"])({
         method: 'POST',
         url: '/index.php/apps/rides/registerbessermitfahren',
+        headers: {
+          'Accept': 'application/json',
+          "Content-Encoding": "application/json"
+        },
+        data: data
+      }).then(response => {
+        this.loading = true;
+        console.log(response.data);
+        this.loading = false;
+      }).catch(error => {
+        console.error(error);
+      });
+    },
+    registerR2G() {
+      const data = {
+        id: null,
+        origin: this.originInput,
+        final: this.finalInput,
+        date: this.dateInput,
+        time: this.timeInput
+      };
+      this.loading = true;
+      (0,axios__WEBPACK_IMPORTED_MODULE_0__["default"])({
+        method: 'POST',
+        url: '/index.php/apps/rides/registerr2g',
         headers: {
           'Accept': 'application/json',
           "Content-Encoding": "application/json"
@@ -4499,15 +4525,16 @@ var render = function render() {
       key: item.id,
       attrs: {
         name: item.id,
-        title: "Original: " + item.original + " - Final: " + item.final + " - Date: " + item.date + " - Time: " + item.time,
+        title: "origin: " + item.origin + " - Final: " + item.final + " - Date: " + item.date + " - Time: " + item.time,
         to: {
           name: "RideDetails",
           params: {
             id: item.id,
-            original: item.original,
+            origin: item.origin,
             final: item.final,
             date: item.date,
-            time: item.time
+            time: item.time,
+            agency: item.agency
           }
         }
       },
@@ -4556,17 +4583,17 @@ var render = function render() {
         },
         proxy: true
       }], null, true)
-    }, [[_c("div", [_vm._v(_vm._s("Original: " + item.original + " - Final: " + item.final + " - Date: " + item.date + " - Time: " + item.time))])]], 2);
+    }, [[_c("div", [_vm._v(_vm._s("origin: " + item.origin + " - Final: " + item.final + " - Date: " + item.date + " - Time: " + item.time))])]], 2);
   }), 1)]), _vm._v(" "), _c("div", [_c("h2", [_vm._v("Bessermitfahren")]), _vm._v(" "), _c("ul", _vm._l(_vm.externalResponse, function (item, index) {
     return _c("NcListItem", {
       key: item.id,
       attrs: {
         name: item.id,
-        title: "Original: " + item.origin + " - Final: " + item.destination + " - Date: " + item.date + " - Time: " + item.time,
+        title: "origin: " + item.origin + " - Final: " + item.destination + " - Date: " + item.date + " - Time: " + item.time,
         to: {
           name: "RideDetails",
           params: {
-            original: item.original,
+            origin: item.origin,
             final: item.final,
             date: item.date,
             time: item.time
@@ -4618,7 +4645,7 @@ var render = function render() {
         },
         proxy: true
       }], null, true)
-    }, [[_c("div", [_vm._v(_vm._s("Original: " + item.origin + " - Final: " + item.destination + " - Date: " + item.date + " - Time: " + item.time))])]], 2);
+    }, [[_c("div", [_vm._v(_vm._s("origin: " + item.origin + " - Final: " + item.destination + " - Date: " + item.date + " - Time: " + item.time))])]], 2);
   }), 1), _vm._v(" "), _c("button", {
     on: {
       click: function ($event) {
@@ -4630,14 +4657,15 @@ var render = function render() {
       key: item.origin,
       attrs: {
         name: item.origin,
-        title: "Original: " + item.origin + " - Final: " + item.destination + " - Date: " + item.date + " - Time: " + item.time,
+        title: "origin: " + item.origin + " - Final: " + item.destination + " - Date: " + item.date + " - Time: " + item.time,
         to: {
           name: "RideDetails",
           params: {
-            original: item.original,
+            origin: item.origin,
             final: item.final,
             date: item.date,
-            time: item.time
+            time: item.time,
+            agency: item.agency
           }
         }
       },
@@ -4686,7 +4714,7 @@ var render = function render() {
         },
         proxy: true
       }], null, true)
-    }, [[_c("div", [_vm._v(_vm._s("Original: " + item.origin + " - Final: " + item.destination + " - Date: " + item.date + " - Time: " + item.time))])]], 2);
+    }, [[_c("div", [_vm._v(_vm._s("origin: " + item.origin + " - Final: " + item.destination + " - Date: " + item.date + " - Time: " + item.time))])]], 2);
   }), 1), _vm._v(" "), _c("button", {
     on: {
       click: function ($event) {
@@ -4718,7 +4746,7 @@ var render = function render() {
     _c = _vm._self._c;
   return !_vm.editing ? _c("div", {
     staticClass: "details"
-  }, [_c("h1", [_vm._v("Ride Details")]), _vm._v(" "), _c("h2", [_vm._v("Ride id: " + _vm._s(_vm.id))]), _vm._v(" "), _c("h2", [_vm._v("Original: " + _vm._s(_vm.original))]), _vm._v(" "), _c("h2", [_vm._v("Final destination: " + _vm._s(_vm.final))]), _vm._v(" "), _c("h2", [_vm._v("Ride date: " + _vm._s(_vm.date))]), _vm._v(" "), _c("h2", [_vm._v("Ride time: " + _vm._s(_vm.time))]), _vm._v(" "), _c("button", {
+  }, [_c("h1", [_vm._v("Ride Details")]), _vm._v(" "), _c("h2", [_vm._v("Agency: " + _vm._s(_vm.agency))]), _vm._v(" "), _c("h2", [_vm._v("Ride id: " + _vm._s(_vm.id))]), _vm._v(" "), _c("h2", [_vm._v("origin: " + _vm._s(_vm.origin))]), _vm._v(" "), _c("h2", [_vm._v("Final destination: " + _vm._s(_vm.final))]), _vm._v(" "), _c("h2", [_vm._v("Ride date: " + _vm._s(_vm.date))]), _vm._v(" "), _c("h2", [_vm._v("Ride time: " + _vm._s(_vm.time))]), _vm._v(" "), _c("button", {
     on: {
       click: _vm.editRide
     }
@@ -4736,15 +4764,15 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.editOriginal,
-      expression: "editOriginal"
+      value: _vm.editorigin,
+      expression: "editorigin"
     }],
     attrs: {
       type: "text",
-      placeholder: "Original"
+      placeholder: "origin"
     },
     domProps: {
-      value: _vm.editOriginal
+      value: _vm.editorigin
     },
     on: {
       keyup: function ($event) {
@@ -4753,7 +4781,7 @@ var render = function render() {
       },
       input: function ($event) {
         if ($event.target.composing) return;
-        _vm.editOriginal = $event.target.value;
+        _vm.editorigin = $event.target.value;
       }
     }
   }), _vm._v(" "), _c("input", {
@@ -4863,15 +4891,15 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.originalInput,
-      expression: "originalInput"
+      value: _vm.originInput,
+      expression: "originInput"
     }],
     attrs: {
       type: "text",
-      placeholder: "Original"
+      placeholder: "origin"
     },
     domProps: {
-      value: _vm.originalInput
+      value: _vm.originInput
     },
     on: {
       keyup: function ($event) {
@@ -4880,7 +4908,7 @@ var render = function render() {
       },
       input: function ($event) {
         if ($event.target.composing) return;
-        _vm.originalInput = $event.target.value;
+        _vm.originInput = $event.target.value;
       }
     }
   }), _vm._v(" "), _c("input", {
@@ -4965,7 +4993,13 @@ var render = function render() {
         return _vm.registerBMF();
       }
     }
-  }, [_vm._v("Register Ride to BesserMitFahren")])])]);
+  }, [_vm._v("Register Ride to BesserMitFahren")])]), _vm._v(" "), _c("div", [_c("button", {
+    on: {
+      click: function ($event) {
+        return _vm.registerR2G();
+      }
+    }
+  }, [_vm._v("Register Ride to Ride2Go")])])]);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -39508,4 +39542,4 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].prototype.OCA = window.OCA;
 
 /******/ })()
 ;
-//# sourceMappingURL=rides-main.js.map?v=d4c9edf84275fd1f5789
+//# sourceMappingURL=rides-main.js.map?v=4f31b5abc200ef4dde64

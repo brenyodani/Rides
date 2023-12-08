@@ -15,15 +15,18 @@
 
         <div class="create">
           <h1>Create a Ride</h1>
-          <input type="text" v-model="originalInput" placeholder="Original" @keyup.enter="addItem" />
+          <input type="text" v-model="originInput" placeholder="origin" @keyup.enter="addItem" />
           <input type="text" v-model="finalInput" placeholder="Final" @keyup.enter="addItem" />
           <input type="date" v-model="dateInput" placeholder="Date" @keyup.enter="addItem" />
           <input type="time" v-model="timeInput" placeholder="Time" @keyup.enter="addItem" />
           <button @click="addItem">Create Ride</button>
         </div>
-
+       
         <div>
           <button @click="registerBMF()">Register Ride to BesserMitFahren</button>
+        </div>
+        <div>
+          <button @click="registerR2G()">Register Ride to Ride2Go</button>
         </div>
       </div>
       
@@ -32,6 +35,7 @@
     <script>
   
   import axios from 'axios';
+
 
   export default {
   name: "Rides",
@@ -43,12 +47,13 @@
   
   data() {
       return {
-          originalInput: "",
+          originInput: "",
           finalInput: "",
           dateInput: "",
           timeInput: "",
           items: [],
-          errors: []
+          errors: [],
+       
       };
   },
   methods: {
@@ -58,8 +63,8 @@
       const specialCharRegex = /[^\w\sÉ]/;
       this.errors = [];
 
-      if (!this.originalInput.trim()) {
-        this.errors.push('Original field cannot be empty');
+      if (!this.originInput.trim()) {
+        this.errors.push('origin field cannot be empty');
       }
       if (!this.finalInput.trim()) {
         this.errors.push('Final field cannot be empty');
@@ -70,8 +75,8 @@
       if (!this.timeInput.trim()) {
         this.errors.push('Time field cannot be empty');
       }
-      if (specialCharRegex.test(this.originalInput)) {
-        this.errors.push('Original field contains special characters');
+      if (specialCharRegex.test(this.originInput)) {
+        this.errors.push('origin field contains special characters');
       }
       if (specialCharRegex.test(this.finalInput)) {
         this.errors.push('Final field contains special characters');
@@ -90,7 +95,7 @@
       
       const data = {
         id: null,
-        original: this.originalInput,
+        origin: this.originInput,
         final: this.finalInput,
         date: this.dateInput,
         time: this.timeInput,
@@ -123,7 +128,7 @@
 
       const data = {
         id: null,
-        original: this.originalInput,
+        origin: this.originInput,
         final: this.finalInput,
         date: this.dateInput,
         time: this.timeInput,
@@ -149,12 +154,39 @@
         .catch((error) => {
           console.error(error);
         });
-
-
-
 },
 
-          
+registerR2G() {
+
+const data = {
+  id: null,
+  origin: this.originInput,
+  final: this.finalInput,
+  date: this.dateInput,
+  time: this.timeInput,
+};
+
+
+this.loading = true;
+axios({
+  method: 'POST',
+  url:'/index.php/apps/rides/registerr2g',
+  headers: {
+    'Accept': 'application/json',
+    "Content-Encoding": "application/json"
+  },
+  data: data,
+
+
+}).then((response) => {
+  this.loading = true;
+  console.log(response.data);
+  this.loading = false;
+})
+  .catch((error) => {
+    console.error(error);
+  });
+},  
   
   },
   };

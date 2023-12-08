@@ -11,6 +11,7 @@ use OCP\AppFramework\ApiController;
 use OCA\Rides\Service\RideService;
 use OCA\Rides\Service\FileService;
 use OCA\Rides\Service\ApiService;
+use OCA\Rides\Service\WebScrapingService;
 
 
 
@@ -23,8 +24,12 @@ class RidesApiController extends ApiController
     private $fileService;
     /** @var ApiService */
     private $apiService;
+    /** @var WebScrapingService */
+    private $webScraper;
+
 
     public function __construct(string $AppName,
+                                WebScrapingService $webScraper,
                                 IRequest $request,
                                 RideService $rideService,
                                 FileService $fileService,
@@ -33,6 +38,8 @@ class RidesApiController extends ApiController
         $this->rideService = $rideService;
         $this->fileService = $fileService;
         $this->apiService = $apiService;
+        $this->webScraper = $webScraper;
+
     }
 
     
@@ -70,10 +77,16 @@ class RidesApiController extends ApiController
     public function editRide() {
 
         $data = $this->fileService->getRideDetails();
+        $loginData = $this->fileService->readBmfSettings(); 
+        $this->webScraper->loginBesserMitFahren($loginData);
 
-      
-            $this->fileService->editFiles($data);
-            return "File edited succesfully";
+        $origin = $this->webScraper->getCityDetailsBmf($data["origin"]);
+        $final = $this->webScraper->getCityDetailsBmf($data["final"]);
+
+        $this->webScraper->editBmfRide($data, $origin, $final);
+        $this->fileService->editFiles($data);
+
+        return "File edited succesfully";
 
     }
 
@@ -86,10 +99,12 @@ class RidesApiController extends ApiController
         
 
         $content = $this->fileService->getRideDetails();
-    
-            $this->fileService->deleteRideFile($content);
-            $this->rideService->deleteID($content);
-            return "Ride deleted succesfully";
+        $data = $this->fileService->readBmfSettings(); 
+        $this->webScraper->loginBesserMitFahren($data);
+        $this->webScraper->deleteBmfRide($content);
+        $this->fileService->deleteRideFile($content);
+        $this->rideService->deleteID($content);
+        return "Ride deleted succesfully";
 
 
     
@@ -125,26 +140,6 @@ class RidesApiController extends ApiController
         $this->fileService->saveUserApiSettings($data);
     }
 
-
-
-    /**
-     * @NoAdminRequired
-     * @NoCSRFRequired
-     */
-    public function saveBmfSettings() {
-        $data = $this->fileService->getBmfSettings();
-        $this->fileService->saveBmfSettings($data);
-    }
-
-
-    /**
-     * @NoAdminRequired
-     * @NoCSRFRequired
-     */
-    public function saveR2GSettings() {
-        $data = $this->fileService->getR2GSettings();
-        $this->fileService->saveR2GSettings($data);
-    }
 
 }
 

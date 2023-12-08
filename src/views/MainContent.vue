@@ -14,11 +14,11 @@
           v-for="(item, index) in jsonResponse"
           :key="item.id"
           :name="item.id"
-          :title="'Original: ' + item.original + ' - Final: ' + item.final + ' - Date: ' + item.date + ' - Time: ' + item.time"
-          :to="{ name: 'RideDetails', params: { id: item.id, original: item.original, final: item.final, date: item.date, time: item.time }}"
+          :title="'origin: ' + item.origin + ' - Final: ' + item.final + ' - Date: ' + item.date + ' - Time: ' + item.time"
+          :to="{ name: 'RideDetails', params: { id: item.id, origin: item.origin, final: item.final, date: item.date, time: item.time, agency: item.agency }}"
         >
           <template>
-            <div>{{ 'Original: ' + item.original + ' - Final: ' + item.final + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
+            <div>{{ 'origin: ' + item.origin + ' - Final: ' + item.final + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
           </template>
           <template #actions>
             <NcActions :inline="2">
@@ -44,12 +44,12 @@
           v-for="(item, index) in externalResponse"
           :key="item.id"
           :name="item.id"
-          :title="'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time"
-          :to="{ name: 'RideDetails', params: {  original: item.original, final: item.final, date: item.date, time: item.time }}"
+          :title="'origin: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time"
+          :to="{ name: 'RideDetails', params: {  origin: item.origin, final: item.final, date: item.date, time: item.time }}"
 
         >
           <template>
-            <div>{{ 'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
+            <div>{{ 'origin: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
           </template>
           <template #actions>
             <NcActions :inline="2">
@@ -77,12 +77,12 @@
           v-for="(item, index) in ride2GoJsonResponse"
           :key="item.origin"
           :name="item.origin"
-          :title="'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time"
-          :to="{ name: 'RideDetails', params: {  original: item.original, final: item.final, date: item.date, time: item.time }}"
+          :title="'origin: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time"
+          :to="{ name: 'RideDetails', params: {  origin: item.origin, final: item.final, date: item.date, time: item.time , agency: item.agency}}"
 
         >
           <template>
-            <div>{{ 'Original: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
+            <div>{{ 'origin: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
           </template>
           <template #actions>
             <NcActions :inline="2">
@@ -226,7 +226,7 @@ import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js';
         name: 'RideDetails', 
         params: { 
           id, 
-          original: item.original, 
+          origin: item.origin, 
           final: item.final, 
           date: item.date, 
           time: item.time 
