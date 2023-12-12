@@ -87,7 +87,7 @@ class FileService {
     public function deleteRideFile($data){
 
         $currentUser = $this->currentUser->getUID();
-        $id = $data;
+        $id = $data["id"];
 
         $fileName = $currentUser . "_" .  $id . ".json";
         $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/" . $fileName;
@@ -458,10 +458,10 @@ class FileService {
     }
 
 
-    public function saveRideR2G($details, $id) {
+    public function saveRideR2G($details) {
 
         $ride_ID = $id["url"];
-        $details["id"] = $ride_ID;
+        $details["r2g_id"] = $ride_ID;
         $details["agency"] = "R2G";
 
         $content = json_encode($details);
@@ -503,11 +503,6 @@ class FileService {
     }
 
 
-    public function deleteRideR2G($id) {
-        
-
-        
-    }
 
 
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="details" v-if="!editing">
         <h1>Ride Details</h1>
-        <h2>Agency: {{ agency }}</h2>
+        <h2>Agency: {{ bmf_id}} + {{ r2g_id }}</h2>
         <h2>Ride id: {{ id }}</h2>
         <h2>origin: {{ origin }}</h2>
         <h2>Final destination: {{ final }}</h2>
@@ -31,7 +31,7 @@
 
     export default {
     name: 'RideDetails',
-    props: ['id', 'origin', 'final', 'date', 'time', 'agency'],
+    props: ['id', 'origin', 'final', 'date', 'time', 'agency', 'bmf_id', 'r2g_id'],
     
     data(){
         return {
@@ -65,7 +65,9 @@
             final: this.editFinal,
             date: this.editDate,
             time: this.editTime,
-            agency: this.agency
+            agency: this.agency,
+            bmf_id: this.bmf_id,
+            r2g_id: this.r2g_id
           };
 
             axios.post('/index.php/apps/rides/api/0.1/edit', data)
@@ -86,8 +88,12 @@
 
             const id = this.$props.id;
 
-           
-            axios.post(`${baseURL}/api/0.1/delete`, id)
+            const data = {
+                id: this.$props.id,
+                bmf_id: this.bmf_id,
+                r2g_id: this.r2g_id
+            }
+            axios.post(`${baseURL}/api/0.1/delete`, data)
             .then(response => {
             console.log(response.data);
             this.$router.push({ name : 'MainContent'});

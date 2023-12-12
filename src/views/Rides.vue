@@ -21,7 +21,13 @@
           <input type="time" v-model="timeInput" placeholder="Time" @keyup.enter="addItem" />
           <button @click="addItem">Create Ride</button>
         </div>
-       
+        <div class="grid">
+            <div class="container">
+              <label :for="tagOptions.props.inputId">{{ tagOptions.name }}</label>
+              <NcSelect :no-wrap="false"
+                v-bind="tagOptions.props"
+                v-model="tagOptions.props.value" />
+              </div>
         <div>
           <button @click="registerBMF()">Register Ride to BesserMitFahren</button>
         </div>
@@ -29,19 +35,22 @@
           <button @click="registerR2G()">Register Ride to Ride2Go</button>
         </div>
       </div>
-      
+      </div>
     </template>
     
     <script>
   
   import axios from 'axios';
+  import NcSelectTags from '@nextcloud/vue/dist/Components/NcSelectTags.js';
+  import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js';
 
 
   export default {
   name: "Rides",
   
   components: {
-  
+  NcSelect,
+  NcSelectTags
   
   }, 
   
@@ -53,10 +62,40 @@
           timeInput: "",
           items: [],
           errors: [],
+          
+          // multiple select box  for agencies
+          tagOptions: {
+            name: 'Agencies',
+            props: {
+              multiple: true,
+		          closeOnSelect: false,
+              options: [
+                'bmf',
+                'r2g'
+              ],
+              value: [
+               'bmf',
+               'r2g'
+               ]
+            }
+          },
+
+          selectedAgencies: []
        
       };
   },
   methods: {
+
+
+    getTagOptionsJSON() {
+  const tagOptionsJSON = this.tagOptions.props.options.map(option => {
+    return { name: option, value: this.tagOptions.props.value.includes(option) };
+  });
+
+  // Now tagOptionsJSON holds an array of objects containing name and value pairs
+  console.log(tagOptionsJSON); // You can console.log or return this JSON array
+  return tagOptionsJSON;
+},
 
    // Function to validate inputs
     validateInputs() {
@@ -93,12 +132,18 @@
         return;
       }
       
+      
+      const tagOptionsJSON = this.getTagOptionsJSON();
+
+
+
       const data = {
         id: null,
         origin: this.originInput,
         final: this.finalInput,
         date: this.dateInput,
         time: this.timeInput,
+        agency: tagOptionsJSON
       };
 
       this.postData(data);
@@ -132,6 +177,8 @@
         final: this.finalInput,
         date: this.dateInput,
         time: this.timeInput,
+        agency: this.tagOptions.props.value
+        
       };
 
       
@@ -144,6 +191,7 @@
           "Content-Encoding": "application/json"
         },
         data: data,
+
 
 
       }).then((response) => {
@@ -207,7 +255,18 @@ axios({
       flex-direction: column;
   }
   
-  
+  .grid {
+	display: grid;
+	grid-template-columns: repeat(1, 1fr);
+	gap: 10px;
+}
+
+.container {
+	max-width: 350px;
+	display: flex;
+	flex-direction: column;
+	gap: 2px 0;
+}
   </style>
   
   

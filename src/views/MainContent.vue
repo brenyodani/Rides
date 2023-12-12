@@ -15,7 +15,7 @@
           :key="item.id"
           :name="item.id"
           :title="'origin: ' + item.origin + ' - Final: ' + item.final + ' - Date: ' + item.date + ' - Time: ' + item.time"
-          :to="{ name: 'RideDetails', params: { id: item.id, origin: item.origin, final: item.final, date: item.date, time: item.time, agency: item.agency }}"
+          :to="{ name: 'RideDetails', params: { id: item.id, origin: item.origin, final: item.final, date: item.date, time: item.time, agency: item.agency, bmf_id : item.bmf_id, r2g_id: item.r2g_id}}"
         >
           <template>
             <div>{{ 'origin: ' + item.origin + ' - Final: ' + item.final + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
@@ -37,74 +37,7 @@
         </NcListItem>
       </ul>
     </div>
-      <div>
-        <h2>Bessermitfahren</h2>
-      <ul>
-        <NcListItem
-          v-for="(item, index) in externalResponse"
-          :key="item.id"
-          :name="item.id"
-          :title="'origin: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time"
-          :to="{ name: 'RideDetails', params: {  origin: item.origin, final: item.final, date: item.date, time: item.time }}"
-
-        >
-          <template>
-            <div>{{ 'origin: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
-          </template>
-          <template #actions>
-            <NcActions :inline="2">
-              <NcActionButton @click="editItem(item.origin)">
-                <template #icon>
-                  <Pencil :size="20" />
-                </template>
-              </NcActionButton>
-              <NcActionButton @click="deleteItem(item.origin)">
-                <template #icon>
-                  <Delete :size="20" />
-                </template>
-              </NcActionButton>
-            </NcActions>
-          </template>
-        </NcListItem>
-      </ul>
-    <button @click="loginBesserMitFahren()">Get Logged In External Data</button>
-  </div>
-
-    <div>
-      <h2>Ride2Go</h2>
-      <ul>
-        <NcListItem
-          v-for="(item, index) in ride2GoJsonResponse"
-          :key="item.origin"
-          :name="item.origin"
-          :title="'origin: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time"
-          :to="{ name: 'RideDetails', params: {  origin: item.origin, final: item.final, date: item.date, time: item.time , agency: item.agency}}"
-
-        >
-          <template>
-            <div>{{ 'origin: ' + item.origin + ' - Final: ' + item.destination + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
-          </template>
-          <template #actions>
-            <NcActions :inline="2">
-              <NcActionButton @click="editItem(item.id)">
-                <template #icon>
-                  <Pencil :size="20" />
-                </template>
-              </NcActionButton>
-              <NcActionButton @click="deleteItem(index)">
-                <template #icon>
-                  <Delete :size="20" />
-                </template>
-              </NcActionButton>
-            </NcActions>
-          </template>
-        </NcListItem>
-      </ul>
-      <button @click="loginR2G()">Scrape r2g</button>
     </div>
- 
-    </div>
-
    
   </template>
   
@@ -160,27 +93,15 @@ import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js';
       };
     },
   
-    created() {
-      this.items = this.$route.params.items || [];
-
-      this.$watch( 
-        () => this.$route.params,
-        () => {
-          this.fetchData();
-        },
-        { immediate : true }
-      )
-    },
-    
+  
     mounted() {
-    
+      this.fetchData();
+
     },
 
     methods: {
 
-      forceRerender() {
-      this.componentKey += 1;
-    },
+    
 
     fetchData() {
 
@@ -201,7 +122,7 @@ import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js';
             this.jsonData = response.data
            
             const startingBracket = this.jsonData.indexOf("[");
-            const closingBracket = this.jsonData.indexOf("]");
+            const closingBracket = this.jsonData.lastIndexOf("]");
 
             const respondeString = this.jsonData.substring(startingBracket + 1, closingBracket);
             const jsonResponse = JSON.parse(`[${respondeString}]`);

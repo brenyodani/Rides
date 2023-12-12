@@ -50,11 +50,43 @@ class RidesApiController extends ApiController
 	 */
     public function setRideDetails() {
         
+        // gets the ride details
         $content = $this->rideService->setRidesDetails();
+
+        //creates and checks if NC_ID exists
         $id = $this->rideService->createId();
         $this->rideService->checkID($id);
 
+        foreach($content["agency"] as $agency) {
+            if($agency["name"] === "bmf" && $agency["value"] === true) {
+               
+                $loginData = $this->fileService->readBmfSettings(); 
+                $this->webScraper->loginBesserMitFahren($loginData);
+                $bmf_id = $this->webScraper->registerRideBMF($content);
+
+            }
+            if($agency["name"] === "r2g" && $agency["value"] === true) {
+                
+                $data = $this->fileService->readR2GSettings();
+                $scrapedData = $this->webScraper->loginRide2Go($data);
+
+               $details = $this->webScraper->registerRideR2G($content);
+                $id_json = $this->webScraper->getIDRide2G($details);
+            }
+        }
+
+        $content["bmf_id"] = $bmf_id;
+        $content["r2g_id"] = $id_json["url"];
+        
+
+        //creates file if all the responses came back 200
         $this->rideService->createRideFile($content, $id);
+
+
+
+        
+
+
 
 }
 
@@ -77,13 +109,30 @@ class RidesApiController extends ApiController
     public function editRide() {
 
         $data = $this->fileService->getRideDetails();
-        $loginData = $this->fileService->readBmfSettings(); 
-        $this->webScraper->loginBesserMitFahren($loginData);
+       
 
-        $origin = $this->webScraper->getCityDetailsBmf($data["origin"]);
-        $final = $this->webScraper->getCityDetailsBmf($data["final"]);
+        // editing the bmf part
+       if($data["bmf_id"] !== null) {
+            $loginData = $this->fileService->readBmfSettings(); 
+            $bmf_id = $data["bmf_id"];
+            $this->webScraper->loginBesserMitFahren($loginData);
 
-        $this->webScraper->editBmfRide($data, $origin, $final);
+            $origin = $this->webScraper->getCityDetailsBmf($data["origin"]);
+            $final = $this->webScraper->getCityDetailsBmf($data["final"]);
+
+            $this->webScraper->editBmfRide($data, $origin, $final);
+    }
+
+
+        if($data["r2g_id"] !== null) {
+            $loginData = $this->fileService->readR2GSettings();
+            $scrapedData = $this->webScraper->loginRide2Go($loginData);
+
+            $this->webScraper->editRideR2G($data);
+
+        }
+
+
         $this->fileService->editFiles($data);
 
         return "File edited succesfully";
@@ -99,9 +148,24 @@ class RidesApiController extends ApiController
         
 
         $content = $this->fileService->getRideDetails();
+        
+
+        if($content["bmf_id"] !== null) {
+        //BMF part
         $data = $this->fileService->readBmfSettings(); 
         $this->webScraper->loginBesserMitFahren($data);
-        $this->webScraper->deleteBmfRide($content);
+        $this->webScraper->deleteBmfRide($content["bmf_id"]);
+        
+    }
+
+        if($content["r2g_id"] !== null) {
+            $data = $this->fileService->readR2GSettings();
+            $scrapedData = $this->webScraper->loginRide2Go($data);
+
+            $this->webScraper->deleteRideR2G($content["r2g_id"]);
+        }
+
+
         $this->fileService->deleteRideFile($content);
         $this->rideService->deleteID($content);
         return "Ride deleted succesfully";
