@@ -318,6 +318,30 @@ class WebScrapingService{
     }
     
 
+    public function searchCity() {
+
+        $request_body = $_GET["origin"];
+
+
+
+        $this->loginClient->request('GET' , 'https://photon.ride2go.com/api?q='. $request_body .'&lang=en');
+        $results = $this->loginClient->getResponse()->getContent();
+
+        echo $results;
+    }
+
+
+    public function searchToCity() {
+
+        $request_body = $_GET["final"];
+
+
+
+        $this->loginClient->request('GET' , 'https://photon.ride2go.com/api?q='. $request_body .'&lang=en');
+        $results = $this->loginClient->getResponse()->getContent();
+
+        echo $results;
+    }
 
 
 }

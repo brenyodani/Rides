@@ -121,9 +121,20 @@ class WebscrapeController extends Controller {
         $this->fileService->saveR2GSettings($data);
     }
 
+     /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function searchFromCity() {
+        $this->webScraper->searchCity();
+    }
 
-    public function deleteRideR2G() {
-
+    /**
+     * @NoAdminRequired
+     * @NoCSRFRequired
+     */
+    public function searchToCity() {
+        $this->webScraper->searchToCity();
     }
 }
 

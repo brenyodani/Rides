@@ -58,6 +58,12 @@ return [
 		['name' => 'webscrape#registerr2g', 'url' => '/registerr2g', 'verb' => 'POST'],
 
 
+		// geodata from ride2go search engine
+
+		['name' => 'webscrape#searchfromcity', 'url' => '/api/0.1/searchfromcity', 'verb' => 'GET'],
+
+		['name' => 'webscrape#searchtocity', 'url' => '/api/0.1/searchtocity', 'verb' => 'GET'],
+
 		
 		]
 ];

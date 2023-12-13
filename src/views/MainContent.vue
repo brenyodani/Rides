@@ -13,21 +13,26 @@
         <NcListItem
           v-for="(item, index) in jsonResponse"
           :key="item.id"
-          :name="item.id"
+          :name="item.origin"
+          :bold="true"
           :title="'origin: ' + item.origin + ' - Final: ' + item.final + ' - Date: ' + item.date + ' - Time: ' + item.time"
           :to="{ name: 'RideDetails', params: { id: item.id, origin: item.origin, final: item.final, date: item.date, time: item.time, agency: item.agency, bmf_id : item.bmf_id, r2g_id: item.r2g_id}}"
         >
-          <template>
-            <div>{{ 'origin: ' + item.origin + ' - Final: ' + item.final + ' - Date: ' + item.date + ' - Time: ' + item.time }}</div>
+          <template #subname>
+            <div v-if="!editing">{{ 'origin: ' }}</div>
+            <div v-else><h2>Editing</h2></div>
+
           </template>
+
           <template #actions>
-            <NcActions :inline="2">
-              <NcActionButton @click="editItem(item.id)">
+            <NcActions :inline="2"  >
+              <NcActionButton aria-label="Edit" @click="editItem()">
                 <template #icon>
                   <Pencil :size="20" />
+                  Edit
                 </template>
               </NcActionButton>
-              <NcActionButton @click="deleteItem(item.id)">
+              <NcActionButton @click="editItem()" ariaLabel="Delete">
                 <template #icon>
                   <Delete :size="20" />
                 </template>
@@ -51,7 +56,7 @@ import NcActions from '@nextcloud/vue/dist/Components/NcActions.js';
 import Delete from 'vue-material-design-icons/Delete';
 import Pencil from 'vue-material-design-icons/Pencil';
 import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js';
-
+import NcActionTextEditable from '@nextcloud/vue/dist/Components/NcActionTextEditable.js'
 
 
 
@@ -67,7 +72,8 @@ import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js';
       NcActions,
       Delete,
       Pencil,
-      NcLoadingIcon
+      NcLoadingIcon,
+      NcActionTextEditable
     },
   
     data() {
@@ -89,6 +95,11 @@ import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js';
         ride2GoResponse: {},
         ride2GoJsonResponse: {},
         loading: 'false',
+        editing: false,
+        editorigin: this.origin,
+        editFinal: this.final,
+        editDate: this.date,
+        editTime: this.time,
      
       };
     },
@@ -139,21 +150,10 @@ import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js';
           
     },
   
-      editItem(id) {
-        const item = this.items.find(item => item.id === id);      
-      
-        if (item) {
-      this.$router.push({ 
-        name: 'RideDetails', 
-        params: { 
-          id, 
-          origin: item.origin, 
-          final: item.final, 
-          date: item.date, 
-          time: item.time 
-        } 
-      });
-    }
+      editItem() {
+
+        this.editing = true;
+     
       },
 
     

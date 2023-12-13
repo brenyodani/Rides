@@ -1,43 +1,39 @@
 <template>
-    <div>
+  <div>
 
-      <div>
-        <p v-if="errors.length">
-          <b>Correct the following errors:</b>
-            <ul>
-              <li v-for="error in errors">{{ error }}</li>
-            </ul>
-        </p>
+    <div class="inputs">
+    <input type="text" v-model="originInput" @input="fetchFromResults" placeholder="Origin" @keyup.enter="addItem" list="from_cityname"/>
+      <datalist id="from_cityname">
+        <div v-for="(result, index) in responsed" :key="index">
+          <div v-for="(country, index) in result.features" :key="index">           
+            <option :value = country.properties.name >{{ country.properties.name }}</option>
+          </div>
+        </div>
+      </datalist>
+    <input type="text" v-model="finalInput" @input="fetchToResults" placeholder="Final" @keyup.enter="addItem" list="to_cityname"/>
+      <datalist id="to_cityname">
+        <div v-for="(result, index) in toResponse" :key="index">
+          <div v-for="(country, index) in result.features" :key="index">           
+            <option :value = country.properties.name >{{ country.properties.name }}</option>
+          </div>
+        </div>
+      </datalist>
+    <input type="date" v-model="dateInput" placeholder="Date" @keyup.enter="addItem" />
+    <input type="time" v-model="timeInput" placeholder="Time" @keyup.enter="addItem" />
+    </div>
+   
+
+    <div class="grid">
+      <div class="container">
+
+        <label :for="tagOptions.props.inputId">{{ tagOptions.name }}</label>
+        <NcSelect :no-wrap="false" v-bind="tagOptions.props" v-model="tagOptions.props.value" />
       </div>
 
-
-
-
-        <div class="create">
-          <h1>Create a Ride</h1>
-          <input type="text" v-model="originInput" placeholder="origin" @keyup.enter="addItem" />
-          <input type="text" v-model="finalInput" placeholder="Final" @keyup.enter="addItem" />
-          <input type="date" v-model="dateInput" placeholder="Date" @keyup.enter="addItem" />
-          <input type="time" v-model="timeInput" placeholder="Time" @keyup.enter="addItem" />
-          <button @click="addItem">Create Ride</button>
-        </div>
-        <div class="grid">
-            <div class="container">
-              <label :for="tagOptions.props.inputId">{{ tagOptions.name }}</label>
-              <NcSelect :no-wrap="false"
-                v-bind="tagOptions.props"
-                v-model="tagOptions.props.value" />
-              </div>
-        <div>
-          <button @click="registerBMF()">Register Ride to BesserMitFahren</button>
-        </div>
-        <div>
-          <button @click="registerR2G()">Register Ride to Ride2Go</button>
-        </div>
-      </div>
-      </div>
-    </template>
-    
+      <button @click="addItem">Create Ride</button>
+    </div>
+  </div>
+</template>
     <script>
   
   import axios from 'axios';
@@ -54,6 +50,9 @@
   
   }, 
   
+  
+
+
   data() {
       return {
           originInput: "",
@@ -62,8 +61,12 @@
           timeInput: "",
           items: [],
           errors: [],
-          
-          // multiple select box  for agencies
+          origin: '',
+          destination: '',
+          results: [],
+          responsed: [],
+
+
           tagOptions: {
             name: 'Agencies',
             props: {
@@ -80,22 +83,83 @@
             }
           },
 
-          selectedAgencies: []
+          selectedAgencies: [],
+          toResults:[],
+          toResponse: []
        
       };
   },
   methods: {
 
 
-    getTagOptionsJSON() {
-  const tagOptionsJSON = this.tagOptions.props.options.map(option => {
-    return { name: option, value: this.tagOptions.props.value.includes(option) };
-  });
+    async fetchFromResults() {
+      try {
+        const response = await axios.get('/index.php/apps/rides/api/0.1/searchfromcity', {
+          params: {
+            origin: this.originInput
+          } 
+        
+        });
+        this.results = response.data;
 
-  // Now tagOptionsJSON holds an array of objects containing name and value pairs
-  console.log(tagOptionsJSON); // You can console.log or return this JSON array
-  return tagOptionsJSON;
+
+          
+        const startingBracket = this.results.indexOf("{");
+        const closingBracket = this.results.lastIndexOf("}");
+
+        const respondeString = this.results.substring(0, closingBracket + 1);
+        const jsonResponse = JSON.parse(`[${respondeString}]`);
+
+        this.responsed = jsonResponse
+
+        
+
+
+        console.log(this.responsed)
+      } catch (error) {
+        console.error('Error fetching results:', error);
+      }
+    },
+
+    async fetchToResults() {
+      try {
+        const response = await axios.get('/index.php/apps/rides/api/0.1/searchtocity', {
+          params: {
+            final: this.finalInput
+          } 
+        
+        });
+        this.toResults = response.data;
+
+
+          
+        const startingBracket = this.toResults.indexOf("{");
+        const closingBracket = this.toResults.lastIndexOf("}");
+
+        const respondeString = this.toResults.substring(0, closingBracket + 1);
+        const jsonResponse = JSON.parse(`[${respondeString}]`);
+
+        this.toResponse = jsonResponse
+
+        
+      } catch (error) {
+        console.error('Error fetching results:', error);
+      }
+    },
+
+        getTagOptionsJSON() {
+      const tagOptionsJSON = this.tagOptions.props.options.map(option => {
+        return { name: option, value: this.tagOptions.props.value.includes(option) };
+      });
+
+  
+      return tagOptionsJSON;
 },
+
+
+
+
+
 
    // Function to validate inputs
     validateInputs() {
@@ -252,20 +316,32 @@ axios({
       justify-content: center;
       align-items: center;
       margin-left: 100px;
-      flex-direction: column;
+      flex-direction: row;
+      max-width: 75%;
   }
   
   .grid {
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
 	gap: 10px;
+  max-width: 75%;
+  padding-left: 100px;
 }
 
 .container {
-	max-width: 350px;
+	max-width: 75%;
 	display: flex;
 	flex-direction: column;
+
 	gap: 2px 0;
+}
+
+
+
+.inputs {
+  display: block;
+  max-width: 75%;
+  padding-left: 100px;
 }
   </style>
   
