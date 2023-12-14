@@ -59,14 +59,20 @@ class RideService {
         $currentUser = $this->currentUser -> getUID();
 
         $fileName = $currentUser . "_" .  $id . ".json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/";
-
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps/rides/rides/";
         $filePath =   $baseDir . $fileName;
         $data["id"] = $id;
         $content = json_encode($data);
 
+        chmod($baseDir, 0777);
 
         try {
+
+            if(!file_exists($baseDir)) {
+                mkdir($_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides", 0777);
+            }
+
+
             if (!file_exists($filePath)) {
                 file_put_contents($filePath, $content);
                 echo "File created and written successfully";
@@ -102,21 +108,24 @@ class RideService {
 
 
     public function checkID($id) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/id.txt";
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/" . "id.txt";
+        
         try {
-
-            $ids = file_get_contents($filePath);
-    
-            $idArray = explode("/", trim($ids));
-    
-            while (in_array($id, $idArray)) {
-                $id++;
+            if (!file_exists($filePath)) {
+                file_put_contents($filePath, $id);
+            } else {
+                $ids = file_get_contents($filePath);
+        
+                $idArray = explode("/", trim($ids));
+        
+                while (in_array($id, $idArray)) {
+                    $id++;
+                }
+        
+                $idArray[] = $id;
+        
+                file_put_contents($filePath, implode('/', $idArray));
             }
-    
-            $idArray[] = $id;
-    
-            file_put_contents($filePath, implode('/', $idArray));
-    
         } catch (\Exception $e) {
             echo "Error: " . $e->getMessage();
         }
@@ -124,7 +133,7 @@ class RideService {
     
     
     public function deleteID($content) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/id.txt";
+        $filePath = $_SERVER['DOCUMENT_ROOT'] .  "/apps/rides/rides/" . "id.txt";
     
         ;
     

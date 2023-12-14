@@ -93,6 +93,7 @@
 
 
     async fetchFromResults() {
+      if(this.originInput.length > 2) {
       try {
         const response = await axios.get('/index.php/apps/rides/api/0.1/searchfromcity', {
           params: {
@@ -119,9 +120,12 @@
       } catch (error) {
         console.error('Error fetching results:', error);
       }
+    }
     },
 
     async fetchToResults() {
+
+      if(this.finalInput.length > 2) {
       try {
         const response = await axios.get('/index.php/apps/rides/api/0.1/searchtocity', {
           params: {
@@ -145,6 +149,7 @@
       } catch (error) {
         console.error('Error fetching results:', error);
       }
+    }
     },
 
         getTagOptionsJSON() {

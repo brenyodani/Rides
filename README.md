@@ -2,56 +2,200 @@
 SPDX-FileCopyrightText: Daniel Brenyo <brenyodani@gmail.com>
 SPDX-License-Identifier: CC0-1.0
 -->
-
 # Rides
-Place this app in **nextcloud/apps/**
 
-## Building the app
+## For Development environment use this setup: 
+ https://github.com/juliushaertl/nextcloud-docker-dev .
 
-The app can be built by using the provided Makefile by running:
 
-    make
+### To start installing this setup, create a folder and cd into the folder: 
 
-This requires the following things to be present:
-* make
-* which
-* tar: for building the archive
-* curl: used if phpunit and composer are not installed to fetch them from the web
-* npm: for building and testing everything JS, only required if a package.json is placed inside the **js/** folder
+```
+cd folder
+git clone https://github.com/juliushaertl/nextcloud-docker-dev
+cd nextcloud-docker-dev
+./bootstrap.sh
+```
 
-The make command will install or update Composer dependencies if a composer.json is present and also **npm run build** if a package.json is present in the **js/** folder. The npm **build** script should use local paths for build systems and package managers, so people that simply want to build the app won't need to install npm libraries globally, e.g.:
+#### Once the installation is done you can start the Nextcloud container using:
 
-**package.json**:
-```json
-"scripts": {
-    "test": "node node_modules/gulp-cli/bin/gulp.js karma",
-    "prebuild": "npm install && node_modules/bower/bin/bower install && node_modules/bower/bin/bower update",
-    "build": "node node_modules/gulp-cli/bin/gulp.js"
-}
+```
+docker-compose up nextcloud
+```
+
+#### After the installation you can login to your nextcloud on :
+
+nextcloud.local
+
+    - username: admin
+    - password: admin
+
+
+#### To install application copy the project folder into workspace/server/apps 
+
+#### After the project folder is in the apps folder, you can enable the application in Nextcloud
+
+
+### If your setup is not working or there is some bug with docker, you can always run :
+```
+docker-compose down -v
+```
+and then: 
+```
+docker-compose up
+```
+In extreme cases if you want to start over, clean everything: 
+```
+docker system prune --all
 ```
 
 
-## Publish to App Store
+## XDebug installation and configuration 
 
-First get an account for the [App Store](http://apps.nextcloud.com/) then run:
+#### Xdebug is shipped but disabled by default. It can be turned on by running:
+``
+./scripts/php-mod-config nextcloud xdebug.mode debug
+``
 
-    make && make appstore
+### To use XDebug with docker you need to install one of the browser plugins, there is one for chrome and for firefox:
 
-The archive is located in build/artifacts/appstore and can then be uploaded to the App Store.
+chrome:
+https://chromewebstore.google.com/detail/xdebug-chrome-extension/oiofkammbajfehgpleginfomeppgnglk?pli=1
 
-## Running tests
-You can use the provided Makefile to run all tests by using:
+firefox:
+https://addons.mozilla.org/en-US/firefox/addon/xdebug-helper-for-firefox/
 
-    make test
 
-This will run the PHP unit and integration tests and if a package.json is present in the **js/** folder will execute **npm run test**
+### In the browser after the installation you need to give the IDE key to the browser extension.
 
-Of course you can also install [PHPUnit](http://phpunit.de/getting-started.html) and use the configurations directly:
+ IDE key: Select the one you are using your setup with: 
+ - VSCODE 
+ - PHPSTORM 
+ - XDEBUG_ECLIPSE 
+ - netbeans 
+ - macgdbp
 
-    phpunit -c phpunit.xml
 
-or:
+### XDebug's launch.json config file for VsCode:
 
-    phpunit -c phpunit.integration.xml
+**launch.json**:
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch currently open script",
+            "type": "php",
+            "request": "launch",
+            "program": "${file}",
+            "cwd": "${fileDirname}"
+        },
+        {
+            "name": "Listen for Xdebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9003
+        },
+        {
+            "name": "Xdebug for Docker",
+            "type": "php",
+            "request": "launch",
+            "port": 9003,
+            "pathMappings": {
+                "/var/www/html/apps/rides": "${workspaceFolder:rides}",
+                "/var/www/html": "${workspaceFolder:rides}"
+            }
+        },
+    ]
+}
+```
 
-for integration tests
+### After configuring the VsCode launch.json, open a terminal and open the docker container
+
+#### To find the ID of the nextcloud container 
+``
+docker ps  
+``
+#### After you found the ID of the container 
+``
+docker exec -it [container_id] /bin/bash
+``
+
+## For Xdebug we need to configure the php.ini file
+
+#### Usually it is in ./3rdparty/aws/aws-crt-php
+``
+cd ./3rdparty/aws/aws-crt-php
+``
+
+#### If it is not there, to find the php.ini file
+
+``
+find -name php.ini
+``
+
+#### After finding the file we need to edit it:
+
+``
+extension=modules/awscrt.so
+xdebug.mode=debug
+xdebug.start_with_request = yes
+zend_extension=xdebug.so
+xdebug.remote_enable=1
+xdebug.remote_autostart=1
+xdebug.remote_host=host.docker.internal
+xdebug.remote_port=9003
+xdebug.remote_handler=dbgp
+xdebug.idekey=VSCODE
+``
+
+
+
+## Obtaining a Certificate for the application
+
+
+#### The certificates should be stored in ~/.nextcloud/certificates/ so first create the folder if it does not exist yet:
+
+``
+mkdir -p ~/.nextcloud/certificates/
+``
+
+#### Then change into the directory:
+
+``
+cd ~/.nextcloud/certificates/
+``
+
+#### To upload a release on the app store you need 3 files: rides.crt-rides.csr-rides.key stored in nextcloud/certificates/ folder
+
+
+#### First change the application version number in appinfo/info.xml
+
+#### Publish to github and create a new release 
+
+#### From the folder delete node_modules and git and VsCode related folders 
+
+#### Create a tar.gz file of the app
+
+``
+tar -czvf rides.tar.gz rides
+``
+#### upload the app.tar.gz file to github
+
+#### In the docker container you need to sign the application 
+
+#### change APP_ID to the application ID 
+
+``
+openssl dgst -sha512 -sign ~/.nextcloud/certificates/APP_ID.key /path/to/app.tar.gz | openssl base64
+``
+
+
+#### To upload the release go to : https://apps.nextcloud.com/developer/apps/releases/new
+
+#### Paste the tar.gz github link and the certificate
+
+
+
+
+

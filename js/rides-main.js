@@ -4996,38 +4996,42 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     async fetchFromResults() {
-      try {
-        const response = await axios__WEBPACK_IMPORTED_MODULE_2__["default"].get('/index.php/apps/rides/api/0.1/searchfromcity', {
-          params: {
-            origin: this.originInput
-          }
-        });
-        this.results = response.data;
-        const startingBracket = this.results.indexOf("{");
-        const closingBracket = this.results.lastIndexOf("}");
-        const respondeString = this.results.substring(0, closingBracket + 1);
-        const jsonResponse = JSON.parse(`[${respondeString}]`);
-        this.responsed = jsonResponse;
-        console.log(this.responsed);
-      } catch (error) {
-        console.error('Error fetching results:', error);
+      if (this.originInput.length > 2) {
+        try {
+          const response = await axios__WEBPACK_IMPORTED_MODULE_2__["default"].get('/index.php/apps/rides/api/0.1/searchfromcity', {
+            params: {
+              origin: this.originInput
+            }
+          });
+          this.results = response.data;
+          const startingBracket = this.results.indexOf("{");
+          const closingBracket = this.results.lastIndexOf("}");
+          const respondeString = this.results.substring(0, closingBracket + 1);
+          const jsonResponse = JSON.parse(`[${respondeString}]`);
+          this.responsed = jsonResponse;
+          console.log(this.responsed);
+        } catch (error) {
+          console.error('Error fetching results:', error);
+        }
       }
     },
     async fetchToResults() {
-      try {
-        const response = await axios__WEBPACK_IMPORTED_MODULE_2__["default"].get('/index.php/apps/rides/api/0.1/searchtocity', {
-          params: {
-            final: this.finalInput
-          }
-        });
-        this.toResults = response.data;
-        const startingBracket = this.toResults.indexOf("{");
-        const closingBracket = this.toResults.lastIndexOf("}");
-        const respondeString = this.toResults.substring(0, closingBracket + 1);
-        const jsonResponse = JSON.parse(`[${respondeString}]`);
-        this.toResponse = jsonResponse;
-      } catch (error) {
-        console.error('Error fetching results:', error);
+      if (this.finalInput.length > 2) {
+        try {
+          const response = await axios__WEBPACK_IMPORTED_MODULE_2__["default"].get('/index.php/apps/rides/api/0.1/searchtocity', {
+            params: {
+              final: this.finalInput
+            }
+          });
+          this.toResults = response.data;
+          const startingBracket = this.toResults.indexOf("{");
+          const closingBracket = this.toResults.lastIndexOf("}");
+          const respondeString = this.toResults.substring(0, closingBracket + 1);
+          const jsonResponse = JSON.parse(`[${respondeString}]`);
+          this.toResponse = jsonResponse;
+        } catch (error) {
+          console.error('Error fetching results:', error);
+        }
       }
     },
     getTagOptionsJSON() {
@@ -65629,4 +65633,4 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].prototype.OCA = window.OCA;
 
 /******/ })()
 ;
-//# sourceMappingURL=rides-main.js.map?v=c7c6b615d97b7bc56e2a
+//# sourceMappingURL=rides-main.js.map?v=90701acf2b6f98687355
