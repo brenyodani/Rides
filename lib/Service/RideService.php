@@ -59,7 +59,7 @@ class RideService {
         $currentUser = $this->currentUser -> getUID();
 
         $fileName = $currentUser . "_" .  $id . ".json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps/rides/rides/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/rides/";
         $filePath =   $baseDir . $fileName;
         $data["id"] = $id;
         $content = json_encode($data);
@@ -69,7 +69,7 @@ class RideService {
         try {
 
             if(!file_exists($baseDir)) {
-                mkdir($_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides", 0777);
+                mkdir($_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/rides", 0777);
             }
 
 
@@ -108,7 +108,7 @@ class RideService {
 
 
     public function checkID($id) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/rides/" . "id.txt";
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/rides/" . "id.txt";
         
         try {
             if (!file_exists($filePath)) {
@@ -133,7 +133,7 @@ class RideService {
     
     
     public function deleteID($content) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'] .  "/apps/rides/rides/" . "id.txt";
+        $filePath = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/rides/" . "id.txt";
     
         ;
     

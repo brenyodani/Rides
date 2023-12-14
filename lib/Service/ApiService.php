@@ -76,7 +76,7 @@ class ApiService {
     public function getEnabledServices() {
 
         $currentUser = $this->currentUser->getUID();
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
         $jsonDirectory = glob($baseDir . $currentUser . '_apisettings.json');
     
         $jsonData = [] ;
@@ -97,7 +97,7 @@ class ApiService {
 
     public function getApiServiceDetails($data) {
         $currentUser = $this->currentUser->getUID();
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
         $jsonFile = glob($baseDir . $currentUser . '*_settings.json');
     
         $returnData = "";
