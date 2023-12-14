@@ -121,7 +121,7 @@ docker ps
 docker exec -it [container_id] /bin/bash
 ``
 
-## For Xdebug we need to configure the php.ini file
+## We need to configure the php.ini file
 
 #### Usually it is in ./3rdparty/aws/aws-crt-php
 ``
@@ -136,22 +136,33 @@ find -name php.ini
 
 #### After finding the file we need to edit it:
 
-``
+**php.ini**:
+```ini
 extension=modules/awscrt.so
+
 xdebug.mode=debug
+
 xdebug.start_with_request = yes
+
 zend_extension=xdebug.so
+
 xdebug.remote_enable=1
+
 xdebug.remote_autostart=1
+
 xdebug.remote_host=host.docker.internal
+
 xdebug.remote_port=9003
+
 xdebug.remote_handler=dbgp
+
 xdebug.idekey=VSCODE
-``
+```
 
 
 
-## Obtaining a Certificate for the application
+
+## Making a release in the AppStore
 
 
 #### The certificates should be stored in ~/.nextcloud/certificates/ so first create the folder if it does not exist yet:
@@ -160,40 +171,46 @@ xdebug.idekey=VSCODE
 mkdir -p ~/.nextcloud/certificates/
 ``
 
-#### Then change into the directory:
+ Then change into the directory:
 
 ``
 cd ~/.nextcloud/certificates/
 ``
 
-#### To upload a release on the app store you need 3 files: rides.crt-rides.csr-rides.key stored in nextcloud/certificates/ folder
+ #### To upload a release on the app store you need 3 files: 
+#### - rides.crt
+#### - rides.csr
+#### - rides.key 
 
+#### These files should be stored in nextcloud/certificates/ folder
 
-#### First change the application version number in appinfo/info.xml
+#### Steps to make a release
+ - First change the application version number in appinfo/info.xml
 
-#### Publish to github and create a new release 
+ - Publish to github and create a new release 
 
-#### From the folder delete node_modules and git and VsCode related folders 
+ - From the folder delete node_modules and .git and .VsCode related folders and files
 
-#### Create a tar.gz file of the app
+ - Create a tar.gz file of the app
 
-``
-tar -czvf rides.tar.gz rides
-``
-#### upload the app.tar.gz file to github
+    ``
+    tar -czvf rides.tar.gz rides
+    ``
 
-#### In the docker container you need to sign the application 
+ - upload the app.tar.gz file to github
 
-#### change APP_ID to the application ID 
+ #### In the docker container you need to sign the application 
+
+ change APP_ID to the application ID 
 
 ``
 openssl dgst -sha512 -sign ~/.nextcloud/certificates/APP_ID.key /path/to/app.tar.gz | openssl base64
 ``
 
 
-#### To upload the release go to : https://apps.nextcloud.com/developer/apps/releases/new
+ To upload the release go to : https://apps.nextcloud.com/developer/apps/releases/new
 
-#### Paste the tar.gz github link and the certificate
+ Paste the tar.gz github link and the certificate
 
 
 

@@ -19,8 +19,9 @@ class FileService {
     // getting rides of the logged in user
     public function readFiles() {
         $currentUser = $this->currentUser->getUID();
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/rides/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/rides/";
         $jsonDirectory = glob($baseDir . $currentUser . '*.json');
+ 
         $jsonData = [];
     
         foreach ($jsonDirectory as $file) {
@@ -59,7 +60,7 @@ class FileService {
         $currentUser = $this->currentUser->getUID();
         $id = $data["id"];
         $fileName = $currentUser . "_" . $id . ".json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/rides/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/rides/";
     
         try {
             if (!is_dir($baseDir)) {
@@ -89,7 +90,7 @@ class FileService {
         $id = $data["id"];
 
         $fileName = $currentUser . "_" .  $id . ".json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/rides/" . $fileName;
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/rides/" . $fileName;
         
         try{
             if (!unlink($baseDir)) { 
@@ -135,7 +136,7 @@ class FileService {
         
         $serviceName = $decodedContent["serviceName"];
         $fileName = $currentUser . "_" . $serviceName . "_settings.json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
         $filePath = $baseDir . $fileName;
         
         try {
@@ -176,7 +177,7 @@ class FileService {
     public function readUserSettings() {
 
         $currentUser = $this->currentUser->getUID();
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
         $jsonDirectory = glob($baseDir . $currentUser . '*_settings.json');
     
         $jsonData = [];
@@ -220,7 +221,7 @@ class FileService {
         $decodedContent = json_decode($content, true); 
         
         $fileName = $currentUser . "_apisettings.json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
         $filePath = $baseDir . $fileName;
         
         try {
@@ -280,7 +281,7 @@ class FileService {
         $decodedContent = json_decode($content, true); 
 
         $fileName = $currentUser . "_bmfsettings.json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
         $filePath = $baseDir . $fileName;
         
                 
@@ -314,7 +315,7 @@ class FileService {
     public function readBmfSettings(){
         
         $currentUser = $this->currentUser->getUID();
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
         $jsonDirectory = glob($baseDir . $currentUser . '*_bmfsettings.json');
     
         $jsonData = [];
@@ -363,7 +364,7 @@ class FileService {
         $decodedContent = json_decode($content, true); 
 
         $fileName = $currentUser . "_r2gsettings.json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
         $filePath = $baseDir . $fileName;
         
                 
@@ -398,7 +399,7 @@ class FileService {
     public function readR2GSettings(){
         
         $currentUser = $this->currentUser->getUID();
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
         $jsonDirectory = glob($baseDir . $currentUser . '*_r2gsettings.json');
     
         $jsonData = [];
@@ -427,7 +428,7 @@ class FileService {
         $currentUser = $this->currentUser -> getUID();
 
         $fileName = $currentUser . "_" . $id . ".json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/rides/";
         $filePath =   $baseDir . $fileName;
 
         try {
@@ -472,7 +473,7 @@ class FileService {
         $currentUser = $this->currentUser -> getUID();
 
         $fileName = $currentUser . "_" . $ride_ID . ".json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] .  "/apps-writable/rides/settings/";
+        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/rides/";
         $filePath =   $baseDir . $fileName;
 
         try {
