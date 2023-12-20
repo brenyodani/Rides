@@ -5,10 +5,13 @@
 
         <div>
           <NcLoadingIcon  :size="64" v-if="loading"/>
-        </div>
-
+        
       </div>
-      <div>
+    </div>
+        <div v-if="jsonResponse.length === 0">
+          No rides have been added yet
+        </div>
+      <div v-else>
       <ul >
         <NcListItem
           v-for="(item, index) in jsonResponse"
@@ -119,7 +122,6 @@ import NcActionTextEditable from '@nextcloud/vue/dist/Components/NcActionTextEdi
 
       this.loading = true;
 
-
       axios({
           method: 'GET',
           url:'api/0.1/get',
@@ -156,66 +158,8 @@ import NcActionTextEditable from '@nextcloud/vue/dist/Components/NcActionTextEdi
      
       },
 
-    
-      loginBesserMitFahren() {
-        this.loading = true;
-        axios({
-          method: 'GET',
-          url:'/index.php/apps/rides/loginbessermitfahren',
-          headers: {
-            'Accept': 'application/json',
-            "Content-Encoding": "application/json"
-          },
 
 
-        }).then((response) => {
-
-          this.externalLoginData = response.data;
-          let lastBraceIndex = this.externalLoginData.lastIndexOf('}');
-          if (lastBraceIndex !== -1) {
-          const cleanedData = this.externalLoginData.substring(0, lastBraceIndex + 1);
-          const afterCleanedData = cleanedData.replace(/\}(?=[^\}]*\})/g, '},');
-          
-          this.externalResponse = JSON.parse(`[${afterCleanedData}]`);
-          }
-          console.log(this.externalResponse);
-          this.loading = false;
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      },
-
-      loginR2G() {
-         this.loading = true;
-        axios({
-          method: 'GET',
-          url:'/index.php/apps/rides/loginride2go',
-          headers: {
-            'Accept': 'application/json',
-            "Content-Encoding": "application/json"
-          },
-
-
-        }).then((response) => {
-
-          this.ride2GoData = response.data;
-          let lastBraceIndex = this.ride2GoData.lastIndexOf('}');
-          if (lastBraceIndex !== -1) {
-          const cleanedData = this.ride2GoData.substring(0, lastBraceIndex + 1);
-          const afterCleanedData = cleanedData.replace(/\}(?=[^\}]*\})/g, '},');
-          
-          this.ride2GoJsonResponse = JSON.parse(`[${afterCleanedData}]`);
-          this.loading = false;
-          }
-
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-
-
-      },
 
 
      

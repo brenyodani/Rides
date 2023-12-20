@@ -6,6 +6,7 @@ namespace Acme;
 
 namespace OCA\Rides\Service;
 require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../config.php';
 
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\DomCrawler\Crawler;
@@ -334,7 +335,6 @@ class WebScrapingService{
     public function searchToCity() {
 
         $request_body = $_GET["final"];
-
 
 
         $this->loginClient->request('GET' , 'https://photon.ride2go.com/api?q='. $request_body .'&lang=en');

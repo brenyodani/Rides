@@ -4,6 +4,7 @@ namespace OCA\Rides\Service;
 
 use OCP\IUserSession;
 
+require_once __DIR__ . '/../../config.php';
 
 class ApiService {
 
@@ -76,7 +77,7 @@ class ApiService {
     public function getEnabledServices() {
 
         $currentUser = $this->currentUser->getUID();
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
+        $baseDir = ROOT_DIR . "/settings/";
         $jsonDirectory = glob($baseDir . $currentUser . '_apisettings.json');
     
         $jsonData = [] ;
@@ -97,7 +98,7 @@ class ApiService {
 
     public function getApiServiceDetails($data) {
         $currentUser = $this->currentUser->getUID();
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/settings/";
+        $baseDir = ROOT_DIR . "/settings/";
         $jsonFile = glob($baseDir . $currentUser . '*_settings.json');
     
         $returnData = "";

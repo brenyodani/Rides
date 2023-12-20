@@ -159,6 +159,36 @@ xdebug.remote_handler=dbgp
 xdebug.idekey=VSCODE
 ```
 
+## We need to configure ./nextcloud-docker-dev-master/docker/configs/php/xdebug.ini
+
+### find the xdebug.ini file and set its content to : 
+
+**xdebug.ini**:
+```ini
+; off develop debug gcstats profile trace
+xdebug.mode = debug
+XDEBUG_SESSION=VSCODE
+xdebug.trace_output_name=trace.%R.%u
+xdebug.profiler_output_name=profile.%R.%u
+xdebug.output_dir=/shared
+xdebug.remote_port=9003
+xdebug.log = /var/log/xdebug.log
+xdebug.log_level = 1
+xdebug.remote_connect_back=1
+; Try to discover the client host, otherwise fall back to the docker host
+xdebug.discover_client_host=true
+xdebug.client_host=host.docker.internal
+xdebug.mode = debug
+xdebug.start_with_request = yes
+xdebug.client_port=“9003” ; Default now is 9003
+; When you cannot specify a trigger, use "xdebug.start_with_request = yes" to autostart debugging for all requests
+; https://xdebug.org/docs/all_settings#start_with_request
+xdebug.start_with_request = yes
+xdebug.trace_format=0
+```
+
+
+
 
 
 
@@ -214,5 +244,15 @@ openssl dgst -sha512 -sign ~/.nextcloud/certificates/APP_ID.key /path/to/app.tar
 
 
 
+## After installing the application to docker dev environment
 
+### To make the application work in dev environment you have to give permissions to the settings and rides folder for file saving
+
+``
+chown -R www-data:www-data rides
+``
+
+``
+chown -R www-data:www-data settings
+``
 

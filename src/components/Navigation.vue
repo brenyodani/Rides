@@ -1,6 +1,6 @@
 <template>
 	  <NcAppNavigation>
-		<NcAppNavigationItem to="/list" name="Rides">
+		<NcAppNavigationItem to="/" name="Rides">
 		</NcAppNavigationItem>
 		<NcAppNavigationItem to="/view" name="Create Ride">
 		</NcAppNavigationItem>

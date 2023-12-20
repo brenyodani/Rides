@@ -17,13 +17,9 @@ export default new Router({
 	base: generateUrl('apps/rides'),
 	routes: [
 		
+	
 		{
 			path: '/',
-			name: 'FirstPage',
-			component: 	FirstPage
-		},
-		{
-			path: '/list',
 			name: 'MainContent',
 			component: MainContent,
 		},

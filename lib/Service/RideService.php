@@ -1,5 +1,8 @@
 <?php 
 
+
+
+
 namespace OCA\Rides\Service;
 
 use OCP\Files\IRootFolder;
@@ -7,6 +10,10 @@ use OCP\Files\IAppData;
 use OCP\Files\Storage\IStorage;
 use OCP\Files\Node\Folder;
 use OCP\IUserSession;
+
+require_once __DIR__ . '/../../config.php';
+
+
 
 class RideService {
 
@@ -59,14 +66,22 @@ class RideService {
         $currentUser = $this->currentUser -> getUID();
 
         $fileName = $currentUser . "_" .  $id . ".json";
-        $baseDir = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/rides/";
+        
 
+
+        $baseDir = ROOT_DIR . "/rides/";
+    
         $filePath =   $baseDir . $fileName;
         $data["id"] = $id;
         $content = json_encode($data);
 
 
         try {
+
+            if (!file_exists($baseDir)) {
+                mkdir($baseDir, 0777, true); 
+            }
+
             if (!file_exists($filePath)) {
                 file_put_contents($filePath, $content);
                 echo "File created and written successfully";
@@ -99,9 +114,11 @@ class RideService {
 
 
     public function checkID($id) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/rides/id.txt";
-        try {
 
+
+        $filePath = ROOT_DIR  . "/rides/id.txt";
+        try {
+            
             $ids = file_get_contents($filePath);
     
             $idArray = explode("/", trim($ids));
@@ -121,9 +138,9 @@ class RideService {
     
     
     public function deleteID($content) {
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . "/apps-writable/rides/rides/id.txt";
+        $filePath = ROOT_DIR  . "/rides/id.txt";
     
-        ;
+        
     
         try {
             $ids = file_get_contents($filePath);

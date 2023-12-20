@@ -1,6 +1,10 @@
 <template>
   <div>
-
+    <div class="error-messages">
+    <ul v-if="errors.length > 0">
+      <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+    </ul>
+  </div>
     <div class="inputs">
     <input type="text" v-model="originInput" @input="fetchFromResults" placeholder="Origin" @keyup.enter="addItem" list="from_cityname"/>
       <datalist id="from_cityname">
@@ -189,6 +193,16 @@
       if (specialCharRegex.test(this.finalInput)) {
         this.errors.push('Final field contains special characters');
       }
+
+      const today = new Date();
+      const targetDate = new Date(this.dateInput);
+
+      today.setHours(0, 0, 0, 0);
+      targetDate.setHours(0, 0, 0, 0);
+
+       if (targetDate < today) {
+        this.errors.push('Date cannot be past');
+      } 
       
       return this.errors.length === 0;
     },
@@ -204,7 +218,8 @@
       
       const tagOptionsJSON = this.getTagOptionsJSON();
 
-
+      var authorUrl = OC.generateUrl('/apps/rides/rides/');
+      console.log(authorUrl);
 
       const data = {
         id: null,
