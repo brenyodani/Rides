@@ -195,7 +195,9 @@ xdebug.trace_format=0
 ## Making a release in the AppStore
 
 
-#### The certificates should be stored in ~/.nextcloud/certificates/ so first create the folder if it does not exist yet:
+### Storing the certificates
+
+The certificates should be stored in ~/.nextcloud/certificates/ so first create the folder if it does not exist yet:
 
 ``
 mkdir -p ~/.nextcloud/certificates/
@@ -207,40 +209,41 @@ mkdir -p ~/.nextcloud/certificates/
 cd ~/.nextcloud/certificates/
 ``
 
- #### To upload a release on the app store you need 3 files: 
-#### - rides.crt
-#### - rides.csr
-#### - rides.key 
+These files should be stored in nextcloud/certificates/ folder:
 
-#### These files should be stored in nextcloud/certificates/ folder
+- rides.crt
+- rides.csr
+- rides.key 
 
-#### Steps to make a release
- - First change the application version number in appinfo/info.xml
+### Steps to make a release
 
- - Publish to github and create a new release 
+1. First change the application version number in appinfo/info.xml
 
- - From the folder delete node_modules and .git and .VsCode related folders and files
+2. Push to github and create a new release 
 
- - Create a tar.gz file of the app
+3. From the folder delete node_modules and .git and .VsCode related folders and files
+
+3. Create a tar.gz file of the app from the parent directory
 
     ``
-    tar -czvf rides.tar.gz rides
+    tar -czvf rides.tar.gz -X rides/excludefile rides
     ``
 
- - upload the app.tar.gz file to github
+4. upload the app.tar.gz file to github
 
- #### In the docker container you need to sign the application 
-
- change APP_ID to the application ID 
+5. Signing the tar.gz file
+ - copy the rides.tar.gz file into nextcloud-docker-dev-pr2/workspace/server/apps 
+ - change APP_ID to the application ID 
 
 ``
 openssl dgst -sha512 -sign ~/.nextcloud/certificates/APP_ID.key /path/to/app.tar.gz | openssl base64
 ``
 
+6. Upload
 
- To upload the release go to : https://apps.nextcloud.com/developer/apps/releases/new
+To upload the release go to : https://apps.nextcloud.com/developer/apps/releases/new
 
- Paste the tar.gz github link and the certificate
+Paste the tar.gz github link and the certificate
 
 
 
