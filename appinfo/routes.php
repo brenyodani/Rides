@@ -61,9 +61,13 @@ return [
 		// geodata from ride2go search engine
 
 		['name' => 'webscrape#searchfromcity', 'url' => '/api/0.1/searchfromcity', 'verb' => 'GET'],
-
 		['name' => 'webscrape#searchtocity', 'url' => '/api/0.1/searchtocity', 'verb' => 'GET'],
 
-		
+		// reading user settings and loading it into input field
+		['name' => 'rides_api#readsavedusersettings', 'url' => '/api/0.1/readsavedusersettings', 'verb' => 'GET'],
+
+
+
+
 		]
 ];

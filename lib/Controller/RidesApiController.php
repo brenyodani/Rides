@@ -205,6 +205,22 @@ class RidesApiController extends ApiController
     }
 
 
+
+   	/**
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+    public function readSavedUserSettings() {
+        
+        $datar2g = $this->fileService->readR2GSettings();
+        $databmf = $this->fileService->readBmfSettings(); 
+
+        $data = [$databmf, $datar2g];
+        echo json_encode($data);
+    }
+
+
+
 }
 
 

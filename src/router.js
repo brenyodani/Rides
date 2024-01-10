@@ -34,7 +34,7 @@ export default new Router({
 			component: UserSettings,
 		},
 		{
-			path: '/list/:id',
+			path: '/:id',
 			name: 'RideDetails',
 			component: RideDetails,
 			props: true,

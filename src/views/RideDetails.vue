@@ -1,8 +1,6 @@
 <template>
     <div class="details" v-if="!editing">
         <h1>Ride Details</h1>
-        <h2>Agency: {{ bmf_id}} + {{ r2g_id }}</h2>
-        <h2>Ride id: {{ id }}</h2>
         <h2>origin: {{ origin }}</h2>
         <h2>Final destination: {{ final }}</h2>
         <h2>Ride date: {{ date }}</h2>

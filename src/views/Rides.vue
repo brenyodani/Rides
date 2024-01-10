@@ -1,12 +1,9 @@
 <template>
   <div>
-    <div class="error-messages">
-    <ul v-if="errors.length > 0">
-      <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
-    </ul>
-  </div>
+    
     <div class="inputs">
-    <input type="text" v-model="originInput" @input="fetchFromResults" placeholder="Origin" @keyup.enter="addItem" list="from_cityname"/>
+      <h2>Create a Ride</h2>
+     <input type="text" v-model="originInput" @input="fetchFromResults" placeholder="Origin" @keyup.enter="addItem" list="from_cityname"/>
       <datalist id="from_cityname">
         <div v-for="(result, index) in responsed" :key="index">
           <div v-for="(country, index) in result.features" :key="index">           
@@ -36,6 +33,12 @@
 
       <button @click="addItem">Create Ride</button>
     </div>
+
+    <div class="error-messages">
+    <ul v-if="errors.length > 0">
+      <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+    </ul>
+  </div>
   </div>
 </template>
     <script>
@@ -172,7 +175,7 @@
 
    // Function to validate inputs
     validateInputs() {
-      const specialCharRegex = /[^\w\sÉ]/;
+
       this.errors = [];
 
       if (!this.originInput.trim()) {
@@ -187,12 +190,7 @@
       if (!this.timeInput.trim()) {
         this.errors.push('Time field cannot be empty');
       }
-      if (specialCharRegex.test(this.originInput)) {
-        this.errors.push('origin field contains special characters');
-      }
-      if (specialCharRegex.test(this.finalInput)) {
-        this.errors.push('Final field contains special characters');
-      }
+     
 
       const today = new Date();
       const targetDate = new Date(this.dateInput);
@@ -207,7 +205,6 @@
       return this.errors.length === 0;
     },
 
-    // Function to add a new item
     addItem() {
       const inputsValid = this.validateInputs();
 
@@ -356,12 +353,21 @@ axios({
 	gap: 2px 0;
 }
 
-
-
 .inputs {
   display: block;
-  max-width: 75%;
-  padding-left: 100px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 100px;
+}
+
+.inputs input {
+  width: 80%;
+}
+
+.error-messages {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 100px;
 }
   </style>
   

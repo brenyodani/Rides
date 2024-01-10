@@ -9,8 +9,14 @@
       </div>
     </div>
         <div v-if="jsonResponse.length === 0">
-          No rides have been added yet
+          No rides have been added yet 
+          <NcListItem :title="''"
+                      :active="true"
+                      class="black-bordered-item"
+                      >
+          </NcListItem>
         </div>
+        
       <div v-else>
       <ul >
         <NcListItem
@@ -182,6 +188,13 @@ import NcActionTextEditable from '@nextcloud/vue/dist/Components/NcActionTextEdi
     align-items: center;
     margin-left: 100px;
   }
+
+
+  .black-bordered-item {
+    box-shadow: 0px 2px 18px 0px rgba(96,179,222,0.3);
+    border-radius: 30px;
+}
+
   </style>
   
 

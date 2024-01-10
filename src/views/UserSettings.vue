@@ -1,50 +1,31 @@
 <template>
     <div>
-      <div>
+   
+
+      
+      <div class="create">
+        <h2>Bessermitfahren login details</h2>
+        <input v-model="emailBmf" placeholder="Email address" type="email" />
+        <input v-model="passwordBmf" placeholder="Password"  type="password" />
+        <button @click="saveBMFSettings">Save</button>
+      </div>
+      
+      <div class="create r2g">
+        <h2>Ride2Go login details</h2>
+        <input v-model="emailr2g" placeholder="Email address" type="email" />
+        <input v-model="passwordr2g" placeholder="Password"  type="password" />
+        <button @click="saveR2GSettings">Save</button>
+      </div>
+
+         <div>
         <p v-if="errors.length">
-          <b>Correct the following errors:</b>
             <ul>
               <li v-for="error in errors">{{ error }}</li>
             </ul>
         </p>
       </div>
 
-      <div class="create">
-        <h1>User settings</h1>
-        <input v-model="serciveNameInput" placeholder="Service name" />
-        <input v-model="userNameInput" placeholder="Agency ID" />
-        <input v-model="passwordInput" placeholder="Deeplink" />
-        <input v-model="apiKeyInput" placeholder="API key" />
-        <button @click="saveSettings">Save</button>
-      </div>
-      
-      <div class="create">
-        <h1>Bessermitfahren login details</h1>
-        <input v-model="emailBmf" placeholder="Email address" type="email" />
-        <input v-model="passwordBmf" placeholder="Password"  type="password" />
-        <button @click="saveBMFSettings">Save</button>
-      </div>
-      
-      <div class="create">
-        <h1>Ride2Go login details</h1>
-        <input v-model="emailr2g" placeholder="Email address" type="email" />
-        <input v-model="passwordr2g" placeholder="Password"  type="password" />
-        <button @click="saveR2GSettings">Save</button>
-      </div>
 
-
-      <div>
-        <NcCheckboxRadioSwitch v-for="(item, index) in jsonResponse" :key="item.serviceName"  :checked.sync="enabledServices" :value="item.serviceName" name="enabledServices">
-        {{ item.serviceName }}
-      </NcCheckboxRadioSwitch>
-      <button @click="saveApiConnections">Save Api endpoints</button>
-
-	    </div>
-
-      <div>
-        {{ enabledServices }}
-      </div>
-      
     </div>
   </template>
   
@@ -52,7 +33,7 @@
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 import axios from 'axios';
 
-  export default {
+  export default { 
     name: "UserSettings",
     components: {
       NcCheckboxRadioSwitch
@@ -81,7 +62,7 @@ import axios from 'axios';
 
       axios({
           method: 'GET',
-          url:'api/0.1/getusersettings',
+          url:'api/0.1/readsavedusersettings',
           headers: {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'application/json'
@@ -90,15 +71,43 @@ import axios from 'axios';
 
         }).then((response) => {
             this.jsonData = response.data
-           
-            const startingBracket = this.jsonData.indexOf("[");
-            const closingBracket = this.jsonData.indexOf("]");
 
-            const respondeString = this.jsonData.substring(startingBracket + 1, closingBracket);
-            const jsonResponse = JSON.parse(`[${respondeString}]`);
-            console.log(jsonResponse);
-            
-            this.jsonResponse = jsonResponse
+            const startingBracket = this.jsonData.indexOf("[");
+            const closingBracket = this.jsonData.lastIndexOf("]");
+
+            const respondeString = this.jsonData.substring(startingBracket + 2, closingBracket);
+
+
+
+            const bmfStartBracket = respondeString.indexOf('[');
+            const bmfCloseBracket = respondeString.indexOf(']');
+
+            const r2gStartBracket = respondeString.indexOf('","');
+            const r2gCloseBracket = respondeString.lastIndexOf(']');
+            console.log(r2gStartBracket);
+
+            const bmfDetails = respondeString.substring(bmfStartBracket + 1, bmfCloseBracket);
+            const r2gDetails = respondeString.substring(r2gStartBracket + 4, r2gCloseBracket);
+
+            const bmfJson = bmfDetails.replace(/\\/g, '');
+            const r2gJson = r2gDetails.replace(/\\/g, '');
+
+
+            const bmfLoginDetails = JSON.parse(bmfJson);
+            const r2gLoginDetails = JSON.parse(r2gJson);
+
+            console.log(bmfLoginDetails);
+            console.log(r2gLoginDetails);
+
+            this.emailBmf = bmfLoginDetails.email;
+            this.passwordBmf = bmfLoginDetails.password;
+
+            this.emailr2g = r2gLoginDetails.email;
+            this.passwordr2g = r2gLoginDetails.password;
+
+           // const jsonResponse = JSON.parse(`[${respondeString}]`);
+
+          //this.jsonResponse = jsonResponse;
           })
           .catch((error) => {
             console.error(error);
@@ -122,8 +131,11 @@ import axios from 'axios';
         axios.post('/index.php/apps/rides/api/0.1/settings', userSettings)
         .then(response => {
           console.log(response.data);
+          this.errors.push('User Settings Saved');
         }) .catch(error => {
           console.log(error);
+          this.errors.push('Error');
+
         });
 
         this.$router.push({ name : 'MainContent'});
@@ -139,8 +151,12 @@ import axios from 'axios';
       axios.post('/index.php/apps/rides/api/0.1/savesettings', services)
       .then(response => {
         console.log(response.data);
+        this.errors.push('User Settings Saved');
+
       }).catch(error => {
         console.log(error); 
+        this.errors.push('Error');
+
       });
 },
 
@@ -153,7 +169,10 @@ import axios from 'axios';
         axios.post('/index.php/apps/rides/api/0.1/savebmfsettings', bmfSettings)
         .then(response => {
           console.log(response.data)
+          this.errors.push('User Settings Saved');
+
         }).catch(error => {
+          this.errors.push('Error');
           console.log(error);
         })
       },
@@ -170,7 +189,10 @@ import axios from 'axios';
         axios.post('/index.php/apps/rides/api/0.1/saver2gsettings', r2gSettings)
         .then(response => {
           console.log(response.data);
+          this.errors.push('User Settings Saved');
+
         }). catch(error => {
+          this.errors.push('Error');
           console.log(error);
         })
       },
@@ -190,6 +212,7 @@ import axios from 'axios';
      align-items: center;
      margin-left: 100px;
      flex-direction: column;
+     text-align: left;
   }
   
   .radio-checkboxes{
@@ -198,5 +221,18 @@ import axios from 'axios';
      justify-content: center;
      align-items: center;
   }
+
+
+  .create > input {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .create > button {
+    margin-top: 20px;
+    margin-bottom: 50px;
+  }
+
+  
   </style>
   
